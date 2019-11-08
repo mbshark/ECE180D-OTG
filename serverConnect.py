@@ -3,6 +3,19 @@
 # You don’t install this. The second line is initialization to add TCP/IP protocol to the endpoint.
 import numpy as np
 import socket
+import fcntl
+import struct
+
+def get_ip_address(ifname):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(
+        s.fileno(),
+        0x8915,  # SIOCGIFADDR
+        struct.pack('256s', ifname[:15].encode())
+    )[20:24])
+
+
+
 serv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 iparray = np.empty((1,40,16),dtype=str)
@@ -11,7 +24,15 @@ iparray = np.empty((1,40,16),dtype=str)
 k = 0
 
 # Assigns a port for the server that listens to clients connecting to this port.
-serv.bind(('172.20.10.5', 8080))
+'''
+try:
+    portno = int(input("What port would you like to use for the server? "))
+except ValueError:
+    print("This is not a valid number.")
+'''
+portno = 8080
+
+serv.bind((get_ip_address('wlan0'), portno))
 while True:
     while True:
         data, addr = serv.recvfrom(4096)
