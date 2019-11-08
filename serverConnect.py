@@ -1,3 +1,4 @@
+# Uses Mark Geha's code https://github.com/markgeha8/CapstoneProject180D/blob/master/Server/serverConnect.py
 # Reminder: This is a comment. The first line imports a default library "socket" into Python.
 # You don’t install this. The second line is initialization to add TCP/IP protocol to the endpoint.
 import numpy as np
