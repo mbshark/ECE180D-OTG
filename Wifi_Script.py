@@ -7,5 +7,11 @@ def get_ip_address(ifname):
     return socket.inet_ntoa(fcntl.ioctl(
         s.fileno(),
         0x8915,  # SIOCGIFADDR
-        struct.pack('256s', ifname[:15])
+        struct.pack('256s', ifname[:15].encode())
     )[20:24])
+
+current_IP = get_ip_address('wlan0')
+print(current_IP)
+
+
+
