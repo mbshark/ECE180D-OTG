@@ -35,7 +35,7 @@ portno = 8080
 
 serverIP = get_ip_address('wlan0')
 
-print(serverIP)
+print("The server IP address is:", serverIP)
 
 serv.bind((serverIP, portno))
 while True:
@@ -43,8 +43,6 @@ while True:
         data, addr = serv.recvfrom(4096)
         if not data: 
             break
-        data = data.decode()
-        print("Data provided is: ", data)
 
         '''
         #Empty the array if the received data is a RESET function
@@ -59,6 +57,7 @@ while True:
         piNum,ip = pickle.loads(data) # data already decoded above
         ipDict[piNum] = ip
 
+        print("Data provided is: ", piNum, "   ", ip)
         # serv.sendto((recData).encode(),(ipAdd,8080))
 
         k = k + 1
