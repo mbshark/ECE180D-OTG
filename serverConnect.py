@@ -5,6 +5,7 @@ import numpy as np
 import socket
 import fcntl
 import struct
+import pickle
 
 def get_ip_address(ifname):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -18,7 +19,7 @@ def get_ip_address(ifname):
 
 serv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-iparray = np.empty((1,40,16),dtype=str)
+ipDict = dict()
 
 #Test/Demo Purposes
 k = 0
@@ -36,61 +37,28 @@ serv.bind((get_ip_address('wlan0'), portno))
 while True:
     while True:
         data, addr = serv.recvfrom(4096)
-        if not data: break
+        if not data: 
+            break
         data = data.decode()
-        print("Data provided is: ")
-        print(data)
-        print('\n')
+        print("Data provided is: ", data)
 
-        recData = ""
-
+        '''
         #Empty the array if the received data is a RESET function
         if(data == "RESET"):
-            iparray = np.empty((1,40,16),dtype=str)
+            iparray = np.empty((40,16),dtype=str)
             recData = "RESET"
 
         #Parse the data into position and IP address.
         else:
-            posBool = True
-            ipBool = True
-            pos = ""
-            ip = ""
-            i = 0
-            while posBool:
-                if(data[i] == ','):
-                    posBool = False
-                    i = i+1
-                    break
-                pos = pos + data[i]
-                i = i+1
-            
-            while ipBool:
-                if(i >= len(data)):
-                    ipBool = False
-                    break
-                ip = ip + data[i]
-                i = i+1
+        '''
 
-            #Add the IP address to the array of IP addresses that will later be referenced
-            for j in range (0, len(ip)):
-                iparray[(0,int(pos)-1)][j] = ip[j]
+        piNum,ip = pickle.loads(data) # data already decoded above
+        ipDict[piNum] = ip
 
-            recData = str(int(pos)+1)
-
-        print("iparray[" + str((int(pos)-1)) + "]: ")
-
-        ipAdd = ""
-
-        for l in range (0,len(iparray[0,int(pos)-1])):
-            ipAdd = ipAdd + iparray[0,int(pos)-1][l]
-
-        print(ipAdd)
-        print('\n')
+        # serv.sendto((recData).encode(),(ipAdd,8080))
 
         k = k + 1
-
-        serv.sendto((recData).encode(),(ipAdd,8080))
-
+        
         if (k > 1000):
             break
         
