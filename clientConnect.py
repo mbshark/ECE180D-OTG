@@ -27,14 +27,17 @@ print(ip)
 piNum = 5
 init_bool = False
 
-init_msg = pickle.dumps(piNum,ip)
+init_msg = pickle.dumps((piNum,ip))
 
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 #enter server IP address - must be known beforehand
 
+serverIP = "192.168.43.141"
+print("The sever IP address is: ", serverIP)
+
 while(not init_bool):
-    client.sendto(init_msg.encode(),('172.20.10.5',8080))
+    client.sendto(init_msg,(serverIP,8080))
 
 #    client.bind((ip,8080))
 #    while(not init_bool):
