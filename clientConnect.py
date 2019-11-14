@@ -5,6 +5,7 @@
 import socket
 import fcntl
 import struct
+import pickle
 
 #Read in IP
 def get_ip_address(ifname):
@@ -23,11 +24,10 @@ print(ip)
 #Use code from Charlotte
 
 #This is a filler for now
-pos = 5
-pos_string = str(pos)
-init_msg = pos_string + "," + ip
+piNum = 5
 init_bool = False
 
+init_msg = pickle.dumps(piNum,ip)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
