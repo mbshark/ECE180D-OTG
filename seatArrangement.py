@@ -1,6 +1,19 @@
 import numpy
+import random
 
-sample=numpy.matrix([[1,2],[3,4]])
+
+def seatGen(x,y,p):
+	seats=numpy.zeros([x,y])
+	count=1
+	for a in numpy.linspace(0,x-1,x):
+		a=int(a)
+		for b in numpy.linspace(0,y-1,y):
+			b=int(b)
+			if random.random()<p:
+				seats[a,b]=count
+				count=count+1
+
+	return seats
 
 
 class entry:
@@ -50,7 +63,6 @@ def verify(entries):
 		a=int(a)
 		map[a]=entries[a].pi
 
-	print(map)
 	for a in numpy.linspace(0,sz-1,sz):
 		a=int(a)
 
@@ -90,7 +102,6 @@ def verify(entries):
 
 	return not(error)
 
-
 def makeChart(entries):
 	if not(verify(entries)):
 		return []
@@ -112,13 +123,7 @@ def makeChart(entries):
 						I=findInd(chart[b,c],entries)
 						explored[I]=1
 
-
-			print(explored)
-			print(chart)
 	return seats
-
-
-
 
 def addNeighbors(chart,ind,entries):
 	if chart.size==0:
@@ -130,19 +135,20 @@ def addNeighbors(chart,ind,entries):
 	#print(curr)
 	if entries[ind].fr>0:
 		if curr[0]==0:
+			print("f")
 			chart=numpy.concatenate((numpy.zeros([1,sz[1]]),chart),axis=0)
-			print("pad top")
+			sz=chart.shape
 			curr[0]=1
 
 		if chart[curr[0]-1,curr[1]]==0:
 			chart[curr[0]-1,curr[1]]=entries[ind].fr
 			chart=addNeighbors(chart,findInd(entries[ind].fr,entries),entries)
 
-
 	if entries[ind].rt>0:
 		if curr[1]==sz[1]-1:
+			print("r")
 			chart=numpy.concatenate((chart,numpy.zeros([sz[0],1])),axis=1)
-			print("pad right")
+			sz=chart.shape
 
 		if chart[curr[0],curr[1]+1]==0:
 			chart[curr[0],curr[1]+1]=entries[ind].rt
@@ -150,8 +156,9 @@ def addNeighbors(chart,ind,entries):
 
 	if entries[ind].bk>0:
 		if curr[0]==sz[0]-1:
+			print("b")
 			chart=numpy.concatenate((chart,numpy.zeros([1,sz[1]])),axis=0)
-			print("pad bottom")
+			sz=chart.shape
 
 		if chart[curr[0]+1,curr[1]]==0:
 			chart[curr[0]+1,curr[1]]=entries[ind].bk
@@ -159,8 +166,9 @@ def addNeighbors(chart,ind,entries):
 
 	if entries[ind].lf>0:
 		if curr[1]==0:
-			chart=numpy.concatenate((numpy.zeros([sz[0],1]),chart),axis=1)
-			print("pad left")
+			print("l")
+			chart=numpy.concatenate((numpy.zeros([numpy.size(chart,1),1]),chart),axis=1)
+			sz=chart.shape
 			curr[1]=1
 
 		if chart[curr[0],curr[1]-1]==0:
@@ -169,7 +177,6 @@ def addNeighbors(chart,ind,entries):
 
 	return chart
 	
-
 def findInd(pi,entries):
 	sz=len(entries)
 	for a in numpy.linspace(0,sz-1,sz):
@@ -181,8 +188,8 @@ def findInd(pi,entries):
 
 
 
-n=retNeighbors(sample)
 
+"""
 for a in numpy.linspace(0,len(n)-1,len(n)):
 	a=int(a)
 	print(n[a].pi)
@@ -191,10 +198,22 @@ for a in numpy.linspace(0,len(n)-1,len(n)):
 	print(n[a].bk)
 	print(n[a].lf)
 	print("-------")
+"""
 
 
-chart=makeChart(n)
-print(chart)
+seats=seatGen(6,6,0.5)
+#seats=numpy.matrix([[1,2],[3,0]])
 
+inputs=retNeighbors(seats)
 
+#inputs=random.shuffle(inputs)
+
+output=makeChart(inputs)
+
+print(seats)
+print("***************")
+
+for a in range(0,len(output)):
+	print(output[a])
+	print("--------------")
 
