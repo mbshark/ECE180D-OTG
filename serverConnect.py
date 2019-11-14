@@ -33,7 +33,11 @@ except ValueError:
 '''
 portno = 8080
 
-serv.bind((get_ip_address('wlan0'), portno))
+serverIP = get_ip_address('wlan0')
+
+print(serverIP)
+
+serv.bind((serverIP, portno))
 while True:
     while True:
         data, addr = serv.recvfrom(4096)
@@ -65,15 +69,15 @@ while True:
     if (k > 1000):
         break
 
-print("Parsing demo completed")
+print(ipDict)
 
-ipArr = []
+'''ipArr = []
 for k in range (0,len(iparray[0])):
     ipTemp = ""
     for temp in range (0,len(iparray[0,k])):
         ipTemp = ipTemp + iparray[0,k][temp]
     ipArr.append(ipTemp)
-
+'''
 
 #https://wiki.python.org/moin/UdpCommunication
 
