@@ -34,7 +34,7 @@ except ValueError:
 portno = 8080
 
 serverIP = get_ip_address('wlan0')
-
+print("This is the SERVER.")
 print("The server IP address is:", serverIP)
 
 serv.bind((serverIP, portno))

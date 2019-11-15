@@ -16,9 +16,11 @@ def get_ip_address(ifname):
         struct.pack('256s'.encode(), ifname[:15].encode())
     )[20:24])
 
-ip = get_ip_address('wlan0')
+clientIP = get_ip_address('wlan0')
 #Test print of IP address
-print(ip)
+
+print("This is the CLIENT.")
+print ("The client IP address is:", clientIP)
 
 #Read in position(pos)
 #Use code from Charlotte
@@ -27,7 +29,7 @@ print(ip)
 piNum = 5
 init_bool = False
 
-init_msg = pickle.dumps((piNum,ip))
+init_msg = pickle.dumps((piNum,clientIP))
 
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
