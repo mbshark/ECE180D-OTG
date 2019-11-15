@@ -35,8 +35,8 @@ client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 #enter server IP address - must be known beforehand
 
-serverIP = "192.168.43.141"
-print("The sever IP address is: ", serverIP)
+serverIP = "172.31.20.126"
+print("The server IP address is: ", serverIP)
 
 while(not init_bool):
     client.sendto(init_msg,(serverIP,8080))
