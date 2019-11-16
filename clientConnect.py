@@ -38,9 +38,15 @@ client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 serverIP = "172.31.20.126"
 print("The server IP address is: ", serverIP)
 
+sock.connect(serverIP,8080)
+
 while(not init_bool):
     client.sendto(init_msg,(serverIP,8080))
 
+    data = recvfrom(4096);
+
+    if (data):
+		print('Received: {}'.format(data.decode()))
 #    client.bind((ip,8080))
 #    while(not init_bool):
 #        from_server = client.recvfrom(4096)
