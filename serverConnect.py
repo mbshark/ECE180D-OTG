@@ -58,8 +58,14 @@ while True:
         ipDict[piNum] = ip
 
         print("Data provided is: ", piNum, "   ", ip)
-        # serv.sendto((recData).encode(),(ipAdd,8080))
+        random = {5:"dino", 6:"apple", 7:"computadora"}
+        
+        print(len(pickle.dumps((piNum,ip,random[piNum]))))
+        serv.sendto(pickle.dumps((piNum,ip,random[piNum])),(ip,8080))
 
+        print("sent")
+       
+       
         k = k + 1
         
         if (k > 1000):
@@ -70,13 +76,6 @@ while True:
 
 print(ipDict)
 
-'''ipArr = []
-for k in range (0,len(iparray[0])):
-    ipTemp = ""
-    for temp in range (0,len(iparray[0,k])):
-        ipTemp = ipTemp + iparray[0,k][temp]
-    ipArr.append(ipTemp)
-'''
 
 #https://wiki.python.org/moin/UdpCommunication
 
