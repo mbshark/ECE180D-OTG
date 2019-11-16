@@ -46,6 +46,7 @@ while(not init_bool):
     print("Waiting")
     data = client.recvfrom(4096);
     if (data):
+        print("Received something")
         print('Received: ', pickle.loads(data))
         break
 #    client.bind((ip,8080))
