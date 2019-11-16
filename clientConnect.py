@@ -40,13 +40,14 @@ print("The server IP address is: ", serverIP)
 
 client.connect((serverIP,8080))
 
+client.sendto(init_msg,(serverIP,8080))
+
 while(not init_bool):
-    client.sendto(init_msg,(serverIP,8080))
-
+    print("Waiting")
     data = client.recvfrom(4096);
-
     if (data):
         print('Received: ', pickle.loads(data))
+        break
 #    client.bind((ip,8080))
 #    while(not init_bool):
 #        from_server = client.recvfrom(4096)
