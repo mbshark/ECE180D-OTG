@@ -38,13 +38,13 @@ client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 serverIP = "192.168.43.190"
 print("The server IP address is: ", serverIP)
 
-client.connect((serverIP,8080))
+#client.bind((serverIP,8080))
 
 client.sendto(init_msg,(serverIP,8080))
 
 while(not init_bool):
     print("Waiting")
-    data = client.recvfrom(4096);
+    data, addr = client.recvfrom(4096)
     if (data):
         print("Received something")
         print('Received: ', pickle.loads(data))
