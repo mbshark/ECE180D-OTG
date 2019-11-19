@@ -6,6 +6,7 @@ import socket
 import fcntl
 import struct
 import pickle
+import asyncio
 
 def get_ip_address(ifname):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -56,8 +57,9 @@ while True:
 
         piNum,ip = pickle.loads(data) # data already decoded above
         ipDict[piNum] = ip
-
+        # ip/addr
         print("Data provided is: ", piNum, "   ", ip)
+        #Verification of server-side logic
         random = {5:"dino", 6:"apple", 7:"computadora"}
         
         print(len(pickle.dumps((piNum,ip,random[piNum]))))
