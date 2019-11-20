@@ -9,12 +9,12 @@ import pickle
 import asyncio
 
 def get_ip_address(ifname):
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    return socket.inet_ntoa(fcntl.ioctl(
-        s.fileno(),
-        0x8915,  # SIOCGIFADDR
-        struct.pack('256s', ifname[:15].encode())
-    )[20:24])
+	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	return socket.inet_ntoa(fcntl.ioctl(
+		s.fileno(),
+		0x8915,  # SIOCGIFADDR
+		struct.pack('256s', ifname[:15].encode())
+	)[20:24])
 
 
 
@@ -28,9 +28,9 @@ k = 0
 # Assigns a port for the server that listens to clients connecting to this port.
 '''
 try:
-    portno = int(input("What port would you like to use for the server? "))
+	portno = int(input("What port would you like to use for the server? "))
 except ValueError:
-    print("This is not a valid number.")
+	print("This is not a valid number.")
 '''
 portno = 8080
 
@@ -40,41 +40,34 @@ print("The server IP address is:", serverIP)
 
 serv.bind((serverIP, portno))
 while True:
-    while True:
-        data, addr = serv.recvfrom(4096)
-        if not data: 
-            break
+	while True:
+		data, addr = serv.recvfrom(4096)
+		if not data: 
+			break
 
-        '''
-        #Empty the array if the received data is a RESET function
-        if(data == "RESET"):
-            iparray = np.empty((40,16),dtype=str)
-            recData = "RESET"
 
-        #Parse the data into position and IP address.
-        else:
-        '''
+		piNum,ip = pickle.loads(data) # data already decoded above
+		ipDict[piNum] = ip
+		# ip/addr
+		print("Data provided is: ", piNum, "   ", ip)
+		#Verification of server-side logic
+		random = {5:"dino", 6:"apple", 7:"computadora"}
+		
+		#print(len(pickle.dumps((piNum,ip,random[piNum]))))
+		#data = 'Hello'
+		print(ip)
+		serv.sendto(pickle.dumps((piNum,ip,random[piNum])), addr)#(ip,8080))
 
-        piNum,ip = pickle.loads(data) # data already decoded above
-        ipDict[piNum] = ip
-        # ip/addr
-        print("Data provided is: ", piNum, "   ", ip)
-        #Verification of server-side logic
-        random = {5:"dino", 6:"apple", 7:"computadora"}
-        
-        print(len(pickle.dumps((piNum,ip,random[piNum]))))
-        serv.sendto(pickle.dumps((piNum,ip,random[piNum])),(ip,8080))
-
-        print("sent")
-       
-       
-        k = k + 1
-        
-        if (k > 1000):
-            break
-        
-    if (k > 1000):
-        break
+		print("sent")
+	   
+	   
+		k = k + 1
+		
+		if (k > 1000):
+			break
+		
+	if (k > 1000):
+		break
 
 print(ipDict)
 
