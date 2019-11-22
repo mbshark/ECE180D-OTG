@@ -1,5 +1,7 @@
 import numpy
 import random
+from quickstart import getFormResponses
+
 
 
 def seatGen(x,y,p):
@@ -200,10 +202,12 @@ for a in numpy.linspace(0,len(n)-1,len(n)):
 	print("-------")
 """
 
-
+"""
+# Generate a seating map where each seat in a grid has a number
 seats=seatGen(6,6,0.5)
 #seats=numpy.matrix([[1,2],[3,0]])
 
+# returns the neighbors of all of those seats and creates an "entry" for each pi
 inputs=retNeighbors(seats)
 
 #inputs=random.shuffle(inputs)
@@ -216,4 +220,25 @@ print("***************")
 for a in range(0,len(output)):
 	print(output[a])
 	print("--------------")
+"""
+# seats=seatGen(6,6,0.5)
+# inputs=retNeighbors(seats)
+
+neighbors=[]
+values = getFormResponses()
+for row in values:
+	neighbors.append(entry(int(row[1]),int(row[4]),int(row[3]),int(row[5]),int(row[2])))
+#inputs=random.shuffle(inputs)
+
+output=makeChart(neighbors)
+
+print(seats)
+print("***************")
+
+for a in range(0,len(output)):
+	print(output[a])
+	print("--------------")
+
+
+
 
