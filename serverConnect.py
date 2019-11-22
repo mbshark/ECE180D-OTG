@@ -56,17 +56,14 @@ while True:
 		#print(len(pickle.dumps((piNum,ip,random[piNum]))))
 		#data = 'Hello'
 		print(ip)
-		serv.sendto(pickle.dumps((piNum,ip,random[piNum])), addr)#(ip,8080))
-
-		print("sent")
-	   
+		serv.sendto(pickle.dumps((piNum,ip,random[piNum])), addr)#(ip,8080))	   
 	   
 		k = k + 1
 		
-		if (k > 1000):
+		if (k >= 1):
 			break
 		
-	if (k > 1000):
+	if (k >= 1):
 		break
 
 print(ipDict)
