@@ -7,6 +7,9 @@ import fcntl
 import struct
 import pickle
 import asyncio
+import time
+from seatArrangement import arrange
+from serverConnect import connect
 
 def get_ip_address(ifname):
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -18,12 +21,13 @@ def get_ip_address(ifname):
 
 
 
-serv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-ipDict = dict()
+
+
+
 
 #Test/Demo Purposes
-k = 0
+
 
 # Assigns a port for the server that listens to clients connecting to this port.
 '''
@@ -32,41 +36,62 @@ try:
 except ValueError:
 	print("This is not a valid number.")
 '''
+
+
+serv = None
+arrangement = None
+ipDict = dict()
 portno = 8080
+k = 0
 
-serverIP = get_ip_address('wlan0')
-print("This is the SERVER.")
-print("The server IP address is:", serverIP)
-
-serv.bind((serverIP, portno))
-while True:
+def connect():
+	global serv, ipDict, porno
+	serv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	serverIP = get_ip_address('wlan0')
+	print("This is the SERVER.")
+	print("The server IP address is:", serverIP)
+	serv.bind((serverIP, portno))
 	while True:
-		data, addr = serv.recvfrom(4096)
-		if not data: 
-			break
-
-
-		piNum,ip = pickle.loads(data) # data already decoded above
-		ipDict[piNum] = ip
-		# ip/addr
-		print("Data provided is: ", piNum, "   ", ip)
-		#Verification of server-side logic
-		random = {5:"dino", 6:"apple", 7:"computadora"}
-		
-		#print(len(pickle.dumps((piNum,ip,random[piNum]))))
-		#data = 'Hello'
-		print(ip)
-		serv.sendto(pickle.dumps((piNum,ip,random[piNum])), addr)#(ip,8080))	   
-	   
-		k = k + 1
-		
+		while True:
+			data, addr = serv.recvfrom(4096)
+			if not data: 
+				break
+			piNum,ip = pickle.loads(data) # data already decoded above
+			ipDict[piNum] = ip
+			# ip/addr
+			print("Data provided is: ", piNum, "   ", ip)
+			#Verification of server-side logic
+			random = {5:"dino", 6:"apple", 7:"computadora"}
+			
+			#print(len(pickle.dumps((piNum,ip,random[piNum]))))
+			#data = 'Hello'
+			print(ip)
+			serv.sendto(pickle.dumps((piNum,ip,random[piNum])), addr)#(ip,8080))	   
+		   
+			k = k + 1
+			
+			if (k >= 1):
+				break
+			
 		if (k >= 1):
 			break
-		
-	if (k >= 1):
-		break
 
-print(ipDict)
+	print(ipDict)
+
+def arrange():
+	global arrangement
+	arrangement = 1	
+	print("This computes arrangements")
+
+
+async def main():
+    # Schedule three calls *concurrently*:
+    await asyncio.gather(
+        connect(),
+        arrange(),
+    )
+
+asyncio.run(main())
 
 
 #https://wiki.python.org/moin/UdpCommunication
