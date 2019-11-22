@@ -71,7 +71,7 @@ def verify(entries):
 			I=numpy.where(map==entries[a].fr)
 
 			if I[0].size!=1:
-                return False
+				return False
 
 			if not((entries[a].fr==entries[int(I[0])].pi)&(entries[a].pi==entries[int(I[0])].bk)):
 				return False
@@ -79,7 +79,7 @@ def verify(entries):
 		if entries[a].rt > 0:
 			I=numpy.where(map==entries[a].rt)
 			if I[0].size!=1:
-                return False
+				return False
 
 			if not((entries[a].rt==entries[int(I[0])].pi)&(entries[a].pi==entries[int(I[0])].lf)):
 				return False
@@ -88,7 +88,7 @@ def verify(entries):
 		if entries[a].bk>0:
 			I=numpy.where(map==entries[a].bk)
 			if I[0].size!=1:
-                return False
+				return False
 				
 			if not((entries[a].bk==entries[int(I[0])].pi)&(entries[a].pi==entries[int(I[0])].fr)):
 				return False
@@ -96,7 +96,7 @@ def verify(entries):
 		if entries[a].lf>0:
 			I=numpy.where(map==entries[a].lf)
 			if I[0].size!=1:
-                return False
+				return False
 				
 			if not((entries[a].lf==entries[int(I[0])].pi)&(entries[a].pi==entries[int(I[0])].rt)):
 				return False
@@ -174,7 +174,7 @@ def addNeighbors(chart,ind,entries):
 
 	if entries[ind].lf>0:
 		if curr[1]==0:
-			chart=numpy.concatenate((numpy.zeros([numpy.size(chart,1),1]),chart),axis=1)
+			chart=numpy.concatenate((numpy.zeros([sz[0],1]),chart),axis=1)
 			sz=chart.shape
 			curr[1]=1
 

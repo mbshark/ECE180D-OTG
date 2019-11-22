@@ -89,7 +89,7 @@ def main():
         print('Name, Major:')
         for row in values:
             # Print columns A and E, which correspond to indices 0 and 4.
-            print('%s, %s' % (row[0], row[4]))
+            print('%s' % row)
 
 if __name__ == '__main__':
     main()
