@@ -56,27 +56,17 @@ def connect():
 			data, addr = serv.recvfrom(4096)
 			if not data: 
 				break
-			piNum,ip = pickle.loads(data) # data already decoded above
+			piNum,ip = pickle.loads(data) 
 			ipDict[piNum] = ip
+			print(ipDict)
 			# ip/addr
 			print("Data provided is: ", piNum, "   ", ip)
 			#Verification of server-side logic
-			random = {5:"dino", 6:"apple", 7:"computadora"}
+			random = {5:"dino", 6:"apple", 7:"computadora"}			
+			serv.sendto(pickle.dumps((piNum,ip,random[piNum])), addr)
 			
-			#print(len(pickle.dumps((piNum,ip,random[piNum]))))
-			#data = 'Hello'
-			print(ip)
-			serv.sendto(pickle.dumps((piNum,ip,random[piNum])), addr)#(ip,8080))	   
-		   
-			k = k + 1
-			
-			if (k >= 1):
-				break
-			
-		if (k >= 1):
-			break
 
-	print(ipDict)
+	
 
 def arrange():
 	global arrangement
