@@ -57,7 +57,6 @@ def retNeighbors(seats):
 	return neighbors			
 
 def verify(entries):
-	error=False
 	sz=len(entries)
 	map = numpy.zeros(sz)
 
@@ -70,39 +69,40 @@ def verify(entries):
 
 		if entries[a].fr > 0:
 			I=numpy.where(map==entries[a].fr)
-			if len(I)>1:
-				error=True
 
-			if not((entries[a].fr==entries[int(I[0][0])].pi)&(entries[a].pi==entries[int(I[0][0])].bk)):
-				error=True
+			if I[0].size!=1:
+                return False
+
+			if not((entries[a].fr==entries[int(I[0])].pi)&(entries[a].pi==entries[int(I[0])].bk)):
+				return False
 
 		if entries[a].rt > 0:
 			I=numpy.where(map==entries[a].rt)
-			if len(I)>1:
-				error=True
+			if I[0].size!=1:
+                return False
 
 			if not((entries[a].rt==entries[int(I[0])].pi)&(entries[a].pi==entries[int(I[0])].lf)):
-				error=True
+				return False
 
 
 		if entries[a].bk>0:
 			I=numpy.where(map==entries[a].bk)
-			if len(I)>1:
-				error=True
+			if I[0].size!=1:
+                return False
 				
 			if not((entries[a].bk==entries[int(I[0])].pi)&(entries[a].pi==entries[int(I[0])].fr)):
-				error=True
+				return False
 				
 		if entries[a].lf>0:
 			I=numpy.where(map==entries[a].lf)
-			if len(I)>1:
-				error=True
+			if I[0].size!=1:
+                return False
 				
 			if not((entries[a].lf==entries[int(I[0])].pi)&(entries[a].pi==entries[int(I[0])].rt)):
-				error=True
+				return False
 				
 
-	return not(error)
+	return True
 
 def makeChart(entries):
 	if not(verify(entries)):
@@ -137,7 +137,6 @@ def addNeighbors(chart,ind,entries):
 	#print(curr)
 	if entries[ind].fr>0:
 		if curr[0]==0:
-			print("f")
 			chart=numpy.concatenate((numpy.zeros([1,sz[1]]),chart),axis=0)
 			sz=chart.shape
 			curr[0]=1
@@ -145,30 +144,36 @@ def addNeighbors(chart,ind,entries):
 		if chart[curr[0]-1,curr[1]]==0:
 			chart[curr[0]-1,curr[1]]=entries[ind].fr
 			chart=addNeighbors(chart,findInd(entries[ind].fr,entries),entries)
+			sz=chart.shape
+			currTup=numpy.where(chart==entries[ind].pi)
+			curr=numpy.array([currTup[0][0],currTup[1][0]])
 
 	if entries[ind].rt>0:
 		if curr[1]==sz[1]-1:
-			print("r")
 			chart=numpy.concatenate((chart,numpy.zeros([sz[0],1])),axis=1)
 			sz=chart.shape
 
 		if chart[curr[0],curr[1]+1]==0:
 			chart[curr[0],curr[1]+1]=entries[ind].rt
 			chart=addNeighbors(chart,findInd(entries[ind].rt,entries),entries)
+			sz=chart.shape
+			currTup=numpy.where(chart==entries[ind].pi)
+			curr=numpy.array([currTup[0][0],currTup[1][0]])
 
 	if entries[ind].bk>0:
 		if curr[0]==sz[0]-1:
-			print("b")
 			chart=numpy.concatenate((chart,numpy.zeros([1,sz[1]])),axis=0)
 			sz=chart.shape
 
 		if chart[curr[0]+1,curr[1]]==0:
 			chart[curr[0]+1,curr[1]]=entries[ind].bk
 			chart=addNeighbors(chart,findInd(entries[ind].bk,entries),entries)
+			sz=chart.shape
+			currTup=numpy.where(chart==entries[ind].pi)
+			curr=numpy.array([currTup[0][0],currTup[1][0]])
 
 	if entries[ind].lf>0:
 		if curr[1]==0:
-			print("l")
 			chart=numpy.concatenate((numpy.zeros([numpy.size(chart,1),1]),chart),axis=1)
 			sz=chart.shape
 			curr[1]=1
@@ -176,6 +181,9 @@ def addNeighbors(chart,ind,entries):
 		if chart[curr[0],curr[1]-1]==0:
 			chart[curr[0],curr[1]-1]=entries[ind].lf
 			chart=addNeighbors(chart,findInd(entries[ind].lf,entries),entries)
+			sz=chart.shape
+			currTup=numpy.where(chart==entries[ind].pi)
+			curr=numpy.array([currTup[0][0],currTup[1][0]])
 
 	return chart
 	
@@ -227,17 +235,15 @@ for a in range(0,len(output)):
 neighbors=[]
 values = getFormResponses()
 for row in values:
-	neighbors.append(entry(int(row[1]),int(row[4]),int(row[3]),int(row[5]),int(row[2])))
+    neighbors.append(entry(int(row[1]),int(row[4]),int(row[3]),int(row[5]),int(row[2])))
+
+   
 #inputs=random.shuffle(inputs)
 
-output=makeChart(neighbors)
+seats=makeChart(neighbors)
 
 print(seats)
 print("***************")
-
-for a in range(0,len(output)):
-	print(output[a])
-	print("--------------")
 
 
 
