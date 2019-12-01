@@ -34,12 +34,17 @@ except ValueError:
 serv = None
 arrangement = None
 ipDict = dict()
+addrDict = dict()
+posDict = dict()
 portno = 8080
 k = 0
 
 TOP = 0
 BOTTOM = 1
 state = 0
+
+ON = 1
+OFF = 0
 
 def thr(i):
 	# we need to create a new loop for the thread, and set it as the 'default'
@@ -68,14 +73,21 @@ async def connect():
 			data, addr = serv.recvfrom(4096)
 			if not data: 
 				break
-			piNum,ip = pickle.loads(data) 
+			piNum,pos, ip = pickle.loads(data) 
 			ipDict[piNum] = ip
-			print(ipDict)
+			addrDict[piNum] = addr
+			posDict[piNum] = pos
 			# ip/addr
 			print("Data provided is: ", piNum, "   ", ip)
 			#Verification of server-side logic
-			rand = {5:"dino", 6:"apple", 7:"computadora"}			
-			serv.sendto(pickle.dumps((piNum,ip,rand[piNum])), addr)
+			rand = {5:"dino", 6:"apple", 7:"computadora"}
+			
+
+			try:		
+				serv.sendto(pickle.dumps((piNum,ip,rand[piNum])), (addrDict[piNum]))
+			except:
+				print("Cound not send")
+
 		await asyncio.sleep(random.uniform(0.1, 0.5))
 		
 def LED_state_machine():
@@ -86,12 +98,49 @@ def LED_state_machine():
 		return TOP
 
 
+def sendToClients(state):
+	if (state == TOP):
+		for pi in addrDict:
+			if (posDict[pi] == "TOP"):
+				print("Turn {} on", pi)
+				try:		
+					serv.sendto(pickle.dumps(ON), (addrDict[pi]))
+				except:
+					print("Cound not send")
+
+			else:
+				print("Turn {} off", pi)
+				try:		
+					serv.sendto(pickle.dumps(OFF), (addrDict[pi]))
+				except:
+					print("Cound not send")
+	if (state == BOTTOM):
+		for pi in addrDict:
+			if (posDict[pi] == "BOTTOM"):
+				print("Turn {} on", pi)
+				try:		
+					serv.sendto(pickle.dumps(ON), (addrDict[pi]))
+				except:
+					print("Cound not send")
+
+			else:
+				print("Turn {} off", pi)
+				try:		
+					serv.sendto(pickle.dumps(OFF), (addrDict[pi]))
+				except:
+					print("Cound not send")
+		
+
+
 async def arrange():
 	global arrangements, state
 	while True:
 		await asyncio.sleep(random.uniform(0.1, 0.5))
 		state = LED_state_machine()
 		print("State is ", state)
+		sendToClients(state)
+
+
 
 
 def main():

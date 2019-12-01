@@ -8,10 +8,20 @@ import struct
 import pickle
 import asyncio
 import time
+
+SETUP = 0
+RUNNING = 1
+CLOSED = 2
+
+ON = 1
+OFF = 0
+
 class Client():
 	def __init__(self, num):
 		self.piNum= num
+		self.pos = "BOTTOM"
 		self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		self.state = SETUP
 	
 	def get_ip_address(self, ifname):
 		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -32,7 +42,7 @@ class Client():
 		#Test print of IP address
 		print("This is the CLIENT.")
 		print ("The client IP address is:", clientIP)
-		init_msg = pickle.dumps((self.piNum,clientIP))		
+		init_msg = pickle.dumps((self.piNum, self.pos, clientIP))		
 		print("The server IP address is: ", serverIP)
 
 		sock.sendto(init_msg,(serverIP,8080))
@@ -42,21 +52,26 @@ class Client():
 		while True:
 			while True:
 				print("Waiting")
-				sock.settimeout(10.0)
+				#sock.settimeout(10.0)
 				data,addr = sock.recvfrom(4096)
 				if not data: 
 					print('No data')
 					break
-				r_ip, r_piNum, resp =  pickle.loads(data)
-				print('Pi#: ', r_piNum)
-				print('Client IP: ', r_ip)
-				print('Server response: ', resp)
-				signal = 1 #placeholder
-				if (signal == 1):
-					self.turnOnLED()
-					time.sleep(10) #asyncio
-					self.turnOffLED()
-					active = 1 #wait for response
+				if (self.state == SETUP):
+					r_ip, r_piNum, resp =  pickle.loads(data)
+					print('Pi#: ', r_piNum)
+					print('Client IP: ', r_ip)
+					print('Server response: ', resp)
+					self.state = RUNNING
+				elif (self.state == RUNNING):
+						signal =  pickle.loads(data)
+						if signal == ON:
+							self.turnOnLED()
+						elif signal == OFF:
+							self.turnOffLED()
+						else:
+							print("Invalid signal received: ", signal)
+			self.state = CLOSED
 			print('Client closed')
 			sock.close()
 
