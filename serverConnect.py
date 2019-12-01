@@ -7,9 +7,11 @@ import fcntl
 import struct
 import pickle
 import asyncio
+import threading
+import random
 import time
-from seatArrangement import arrange
-from serverConnect import connect
+#from seatArrangement import arrange
+#from serverConnect import connect
 
 def get_ip_address(ifname):
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -19,16 +21,7 @@ def get_ip_address(ifname):
 		struct.pack('256s', ifname[:15].encode())
 	)[20:24])
 
-
-
-
-
-
-
-
 #Test/Demo Purposes
-
-
 # Assigns a port for the server that listens to clients connecting to this port.
 '''
 try:
@@ -44,8 +37,25 @@ ipDict = dict()
 portno = 8080
 k = 0
 
-def connect():
-	global serv, ipDict, porno
+TOP = 0
+BOTTOM = 1
+state = 0
+
+def thr(i):
+	# we need to create a new loop for the thread, and set it as the 'default'
+	# loop that will be returned by calls to asyncio.get_event_loop() from this
+	# thread.
+	loop = asyncio.new_event_loop()
+	asyncio.set_event_loop(loop)
+	#loop.run_until_complete(do_stuff(i))
+	if (i == 1):
+		loop.run_until_complete(connect())
+	else:
+		loop.run_until_complete(arrange())    
+	loop.close()
+
+async def connect():	
+	global serv, ipDict, portno
 	serv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	serverIP = get_ip_address('wlan0')
 	print("This is the SERVER.")
@@ -53,6 +63,8 @@ def connect():
 	serv.bind((serverIP, portno))
 	while True:
 		while True:
+			await asyncio.sleep(random.uniform(0.1, 0.5))
+			print("connect")
 			data, addr = serv.recvfrom(4096)
 			if not data: 
 				break
@@ -62,27 +74,36 @@ def connect():
 			# ip/addr
 			print("Data provided is: ", piNum, "   ", ip)
 			#Verification of server-side logic
-			random = {5:"dino", 6:"apple", 7:"computadora"}			
-			serv.sendto(pickle.dumps((piNum,ip,random[piNum])), addr)
-			
+			rand = {5:"dino", 6:"apple", 7:"computadora"}			
+			serv.sendto(pickle.dumps((piNum,ip,rand[piNum])), addr)
+		await asyncio.sleep(random.uniform(0.1, 0.5))
+		
+def LED_state_machine():
+	global state
+	if (state == TOP):
+		return BOTTOM
+	if (state == BOTTOM):
+		return TOP
 
-	
 
-def arrange():
-	global arrangement
-	arrangement = 1	
-	print("This computes arrangements")
+async def arrange():
+	global arrangements, state
+	while True:
+		await asyncio.sleep(random.uniform(0.1, 0.5))
+		state = LED_state_machine()
+		print("State is ", state)
 
 
-async def main():
-    # Schedule three calls *concurrently*:
-    await asyncio.gather(
-        connect(),
-        arrange(),
-    )
+def main():
+	num_threads = 2
+	threads = [ threading.Thread(target = thr, args=(i,)) for i in range(num_threads) ]
+	[ t.start() for t in threads ]
+	[ t.join() for t in threads ]
+	print("bye")
 
-asyncio.run(main())
 
+if __name__ == "__main__":
+	main()
 
 #https://wiki.python.org/moin/UdpCommunication
 

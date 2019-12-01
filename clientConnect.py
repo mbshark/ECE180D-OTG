@@ -7,8 +7,8 @@ import fcntl
 import struct
 import pickle
 import asyncio
-
-class Client(Thread):
+import time
+class Client():
 	def __init__(self, num):
 		self.piNum= num
 		self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -50,11 +50,11 @@ class Client(Thread):
 				r_ip, r_piNum, resp =  pickle.loads(data)
 				print('Pi#: ', r_piNum)
 				print('Client IP: ', r_ip)
-				print('Server response: ', r_random)
-				signal = int(resp)#placeholder
+				print('Server response: ', resp)
+				signal = 1 #placeholder
 				if (signal == 1):
 					self.turnOnLED()
-					sleep(10) #asyncio
+					time.sleep(10) #asyncio
 					self.turnOffLED()
 					active = 1 #wait for response
 			print('Client closed')
@@ -62,7 +62,6 @@ class Client(Thread):
 
 if __name__ == "__main__":
 	serverIP = "192.168.43.207"
-	client = Client(5)
+	client = Client(6)
 	client.setupServer(serverIP)
 	client.runClient()
-
