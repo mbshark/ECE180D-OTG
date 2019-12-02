@@ -155,49 +155,4 @@ if __name__ == "__main__":
 	main()
 
 #https://wiki.python.org/moin/UdpCommunication
-
-#______________________________________________________________________________________________________#
-#Code Test
-
 #https://www.geeksforgeeks.org/socket-programming-python/
-#i_add = 0
-#cont = True
-#serv.listen(40)
-#
-#while True:
-#    while cont:
-#        c, add = serv.accept()
-#        if(add == ipArr[i_add]):
-#            cont = False
-#        else:
-#            cont = True
-#            c.close()
-
-#    c.send(("testLED").encode())
-#    c.close()
-
-#______________________________________________________________________________________________________#
-#Time Increment
-
-#i_add = 0
-#cont = True
-#hold = True
-#serv.listen(40)
-
-#while True:
-#    while cont:
-#        c, add = serv.accept()
-#        if(add == ipArr[i_add]):
-#            cont = False
-#        else:
-#            cont = True
-#            c.close()
-
-#    c.send(("startLED").encode())
-
-#    while hold:
-#        msg = c.recv(4096)
-#        if((msg.decode()) == "Done"):
-#            hold = False
-
-#    c.close()
