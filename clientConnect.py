@@ -76,7 +76,7 @@ class Client():
 			sock.close()
 
 if __name__ == "__main__":
-	serverIP = "192.168.43.207"
+	serverIP = "192.168.43.3"
 	client = Client(6)
 	client.setupServer(serverIP)
 	client.runClient()
