@@ -3,7 +3,6 @@
 # You don’t install this. The second line is initialization to add TCP/IP protocol to the endpoint.
 import numpy as np
 import socket
-import fcntl
 import struct
 import pickle
 import asyncio
@@ -15,6 +14,7 @@ import time
 
 def get_ip_address(ifname):
 	try:
+		import fcntl
 		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		return socket.inet_ntoa(fcntl.ioctl(
 			s.fileno(),
