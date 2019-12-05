@@ -14,12 +14,20 @@ import time
 #from serverConnect import connect
 
 def get_ip_address(ifname):
-	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-	return socket.inet_ntoa(fcntl.ioctl(
-		s.fileno(),
-		0x8915,  # SIOCGIFADDR
-		struct.pack('256s', ifname[:15].encode())
-	)[20:24])
+	try:
+		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		return socket.inet_ntoa(fcntl.ioctl(
+			s.fileno(),
+			0x8915,  # SIOCGIFADDR
+			struct.pack('256s', ifname[:15].encode())
+		)[20:24])
+	except:
+		try: 
+			host_name = socket.gethostname() 
+			host_ip = socket.gethostbyname(host_name) 
+			return host_ip 
+		except: 
+			print("Unable to get Hostname and IP") 
 
 #Test/Demo Purposes
 # Assigns a port for the server that listens to clients connecting to this port.
