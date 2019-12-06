@@ -42,11 +42,13 @@ except ValueError:
 
 serv = None
 arrangement = None
+seats = None
 ipDict = dict()
 addrDict = dict()
 posDict = dict()
 portno = 8080
 k = 0
+seed = 0
 
 TOP = 0
 BOTTOM = 1
@@ -69,7 +71,7 @@ def thr(i):
 	loop.close()
 
 async def connect():	
-	global serv, ipDict, portno
+	global serv, ipDict, portno, seats, arrangement
 	serv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	serverIP = get_ip_address('wlan0')
 	print("This is the SERVER.")
@@ -97,6 +99,13 @@ async def connect():
 			except:
 				print("Cound not send")
 
+			if len(posDict) >= 4:
+				seats = getSeatArr()
+				# arrangement['U'] = letter.findU(seats)
+				# arrangement['C'] = letter.findC(seats)
+				arrangement['L'] = letter.findL(seats)
+				# arrangement['A'] = letter.findA(seats)
+
 		await asyncio.sleep(random.uniform(0.1, 0.5))
 		
 def LED_state_machine():
@@ -106,8 +115,17 @@ def LED_state_machine():
 	if (state == BOTTOM):
 		return TOP
 
+	if (state == 'U'):
+		return 'C'
+	if (state == 'C')
+		return 'L'
+	if (state == 'L'):
+		return 'A'
+	if (state == 'A'):
+		return 'U'
 
 def sendToClients(state):
+	global seed
 	if (state == TOP):
 		for pi in addrDict:
 			if (posDict[pi] == "TOP"):
@@ -138,17 +156,46 @@ def sendToClients(state):
 					serv.sendto(pickle.dumps(OFF), (addrDict[pi]))
 				except:
 					print("Cound not send")
-		
+
+	if state == 'L':
+		seed = random.randint(0,len(arrangement['L'])-1)
+		for pi in addrDict:
+			if pi in arrangement['L'][seed].unique():
+				print("Turn {} on", pi)
+				try:
+					serv.sendto(pickle.dumps(ON), (addrDict[pi]))
+				except:
+					print("Cound not send")
+
+			else:
+				print("Turn {} off", pi)
+				try:
+					serv.sendto(pickle.dumps(OFF), (addrDict[pi]))
+				except:
+					print("Cound not send")
+
+
+	else: #unknown state turn off
+		for pi in addrDict:
+			print("Turn {} off", pi)
+			try:
+				serv.sendto(pickle.dumps(OFF), (addrDict[pi]))
+			except:
+				print("Cound not send")
+
 
 
 async def arrange():
-	global arrangements, state
+	global arrangements, state, seats
 	while True:
-		await asyncio.sleep(random.uniform(0.1, 0.5))
-		state = LED_state_machine()
-		print("State is ", state)
-		sendToClients(state)
+		if seats:
+			for i in range(5 * 60 / 5):
+				await asyncio.sleep(5)
+				state = LED_state_machine()
+				print("State is ", state)
+				sendToClients(state)
 
+			#
 
 
 
