@@ -232,18 +232,28 @@ for a in range(0,len(output)):
 # seats=seatGen(6,6,0.5)
 # inputs=retNeighbors(seats)
 
-neighbors=[]
-values = getFormResponses()
-for row in values:
-    neighbors.append(entry(int(row[1]),int(row[4]),int(row[3]),int(row[5]),int(row[2])))
+def getSeatArr():
+	neighbors=[]
+	values = getFormResponses()
+	for row in values:
+		neighbors.append(entry(int(row[1]),int(row[4]),int(row[3]),int(row[5]),int(row[2])))
 
-   
-#inputs=random.shuffle(inputs)
+	#inputs=random.shuffle(inputs)
 
-seats=makeChart(neighbors)
+	seats=makeChart(neighbors)
 
-print(seats)
-print("***************")
+	if not seats:
+		print("No data found.")
+	print("************SEATING ARRANGEMENT************")
+	print(seats)
+	print("************SEATING ARRANGEMENT************")
+	return seats
+
+def main():
+	getSeatArr()
+
+if __name__ == '__main__':
+    main()
 
 
 

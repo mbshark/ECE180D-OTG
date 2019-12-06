@@ -1,3 +1,5 @@
 
 token.pickle
 .DS_Store
+credentials.json
+__pycache__/quickstart.cpython-37.pyc

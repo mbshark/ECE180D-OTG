@@ -9,6 +9,7 @@ import asyncio
 import threading
 import random
 import time
+from seatArrangement import getSeatArr
 #from seatArrangement import arrange
 #from serverConnect import connect
 
