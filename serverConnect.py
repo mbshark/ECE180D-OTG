@@ -43,6 +43,7 @@ except ValueError:
 
 serv = None
 arrangement = None
+seats = None
 ipDict = dict()
 addrDict = dict()
 posDict = dict()
@@ -52,6 +53,7 @@ waitTime = dict()
 
 portno = 8080
 k = 0
+seed = 0
 
 TOP = 0
 BOTTOM = 1
@@ -79,7 +81,7 @@ def thr(i):
 
 
 async def connect():	
-	global serv, ipDict, portno, ACK
+	global serv, ipDict, portno, seats, arrangement, ACK
 	serv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	serv.settimeout(10)	
 	serverIP = get_ip_address('wlan0')
@@ -111,9 +113,17 @@ async def connect():
 					try:		
 						serv.sendto(pickle.dumps((piNum,ip,rand[piNum])), (addrDict[piNum]))
 					except:
-						print("Cound not send")
+						print("Client connection closed")
 			except:
-				print("No connection")
+
+				print("No Connections")
+
+			if len(posDict) >= 4:
+				seats = getSeatArr()
+				# arrangement['U'] = letter.findU(seats)
+				# arrangement['C'] = letter.findC(seats)
+				arrangement['L'] = letter.findL(seats)
+				# arrangement['A'] = letter.findA(seats)
 		await asyncio.sleep(random.uniform(0.1, 0.5))
 
 		
@@ -123,6 +133,15 @@ def LED_state_machine():
 		return BOTTOM
 	if (state == BOTTOM):
 		return TOP
+	if (state == 'U'):
+		return 'C'
+	if (state == 'C')
+		return 'L'
+	if (state == 'L'):
+		return 'A'
+	if (state == 'A'):
+		return 'U'
+
 
 async def sendClient(msg, pi):
 	global serv, addrDict,ackDict,waitTime
@@ -143,6 +162,7 @@ async def sendClient(msg, pi):
 
 
 async def sendToClients(state):
+	global seed
 	if (state == TOP):
 		for pi in addrDict:
 			if (posDict[pi] == "TOP"):
@@ -156,20 +176,20 @@ async def sendToClients(state):
 				await sendClient(ON, pi)
 			else:
 				await sendClient(OFF, pi)
+	if state == 'L':
+		seed = random.randint(0,len(arrangement['L'])-1)
+		for pi in addrDict:
+			if pi in arrangement['L'][seed].unique():
+				await sendClient(ON, pi)
+
+			else:
+				await sendClient(OFF, pi)
+
+
+	else: #unknown state turn off
+		for pi in addrDict:
+			await sendClient(OFF, pi)
 		
-
-
-async def arrange():
-	global arrangements, state
-	try:
-		while True:
-			await asyncio.sleep(random.uniform(1,2))
-			if (not len(ipDict) == 0):
-				state = LED_state_machine()
-			#print("State is ", state)
-			await sendToClients(state)
-	except KeyboardInterrupt:
-		print('interrupted!')
 
 async def checkACK():
 	global ackDict, waitTime
@@ -195,6 +215,23 @@ async def checkACK():
 		cleanClients()
 
 		await asyncio.sleep(random.uniform(0.1, 0.5))
+
+	
+
+
+async def arrange():
+	global arrangements, state
+	try:
+		while True:
+			if seats:				
+				for i in range(5 * 60 / 5):
+					await asyncio.sleep(random.uniform(1,2))
+					if (not len(ipDict) == 0):
+						state = LED_state_machine()
+					#print("State is ", state)
+					await sendToClients(state)
+	except KeyboardInterrupt:
+		print('interrupted!')
 
 def cleanClients():
 	global addrDict,posDict,ipDict
