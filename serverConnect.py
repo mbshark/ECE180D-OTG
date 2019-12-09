@@ -113,10 +113,10 @@ async def connect():
 					try:		
 						serv.sendto(pickle.dumps((piNum,ip,rand[piNum])), (addrDict[piNum]))
 					except:
-						print("Client connection closed")
+						print("Error Sending")
 			except:
 
-				print("No Connections")
+				print("Client Closed")
 
 			if len(posDict) >= 4:
 				seats = getSeatArr()
@@ -135,7 +135,7 @@ def LED_state_machine():
 		return TOP
 	if (state == 'U'):
 		return 'C'
-	if (state == 'C')
+	if (state == 'C'):
 		return 'L'
 	if (state == 'L'):
 		return 'A'
@@ -170,13 +170,13 @@ async def sendToClients(state):
 			else:
 				await sendClient(OFF, pi)
 				
-	if (state == BOTTOM):
+	elif (state == BOTTOM):
 		for pi in addrDict:
 			if (posDict[pi] == "BOTTOM"):
 				await sendClient(ON, pi)
 			else:
 				await sendClient(OFF, pi)
-	if state == 'L':
+	elif state == 'L':
 		seed = random.randint(0,len(arrangement['L'])-1)
 		for pi in addrDict:
 			if pi in arrangement['L'][seed].unique():
@@ -184,7 +184,6 @@ async def sendToClients(state):
 
 			else:
 				await sendClient(OFF, pi)
-
 
 	else: #unknown state turn off
 		for pi in addrDict:
@@ -202,7 +201,7 @@ async def checkACK():
 				delete.append(pi)
 			else:
 				waitTime[pi] += 1
-				if(waitTime[pi] > len(addrDict)*1.5):
+				if(waitTime[pi] > len(addrDict)+2):
 					print("Client does not exist: ", pi)
 					addrDict[pi] = -1
 					posDict[pi] = -1
@@ -223,13 +222,13 @@ async def arrange():
 	global arrangements, state
 	try:
 		while True:
-			if seats:				
-				for i in range(5 * 60 / 5):
-					await asyncio.sleep(random.uniform(1,2))
-					if (not len(ipDict) == 0):
-						state = LED_state_machine()
-					#print("State is ", state)
-					await sendToClients(state)
+			#if seats:				
+			#for i in range(5 * 60 / 5):
+			await asyncio.sleep(random.uniform(1,2))
+			if (not len(ipDict) == 0):
+				state = LED_state_machine()
+			print("State is ", state)
+			await sendToClients(state)
 	except KeyboardInterrupt:
 		print('interrupted!')
 

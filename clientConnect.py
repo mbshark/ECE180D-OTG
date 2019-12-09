@@ -19,7 +19,7 @@ OFF = 0
 class Client():
 	def __init__(self, num):
 		self.piNum= num
-		self.pos = "BOTTOM"
+		self.pos = "ROW_1"
 		self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		self.state = SETUP
 	
@@ -32,9 +32,10 @@ class Client():
 
 	def turnOnLED(self):
 		print("This turns on LED")
-
+		#time.sleep(5)
 	def turnOffLED(self):
 		print("This turns off LED")
+		#time.sleep(5)
 
 	def setupServer(self, serverIP):
 		sock = self.sock
@@ -49,10 +50,13 @@ class Client():
 
 	def runClient(self):	
 		sock = self.sock
+		ack = pickle.dumps((self.piNum))	
 		while True:
 			while True:
 				print("Waiting")
-				#sock.settimeout(10.0)
+				#sock.settimeout(20.0)
+				import signal
+				signal.signal(signal.SIGINT, signal.SIG_DFL)
 				data,addr = sock.recvfrom(4096)
 				if not data: 
 					print('No data')
@@ -67,16 +71,21 @@ class Client():
 						signal =  pickle.loads(data)
 						if signal == ON:
 							self.turnOnLED()
+
 						elif signal == OFF:
 							self.turnOffLED()
 						else:
-							print("Invalid signal received: ", signal)
+							print("Invalid signal received: ", signal)				
+				ack_msg = pickle.dumps((self.piNum, self.pos, "ACK"))
+				sock.sendto(ack_msg,(serverIP,8080))
+		
 			self.state = CLOSED
 			print('Client closed')
 			sock.close()
+		
 
 if __name__ == "__main__":
-	serverIP = "192.168.43.3"
-	client = Client(6)
+	serverIP = "192.168.1.14"
+	client = Client(1)
 	client.setupServer(serverIP)
 	client.runClient()
