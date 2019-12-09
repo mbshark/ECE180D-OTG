@@ -89,7 +89,7 @@ class Client():
 		
 
 if __name__ == "__main__":
-	serverIP = "192.168.1.14"
-	client = Client(1)
+	serverIP = "192.168.0.238"
+	client = Client(2)
 	client.setupServer(serverIP)
 	client.runClient()
