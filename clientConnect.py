@@ -31,9 +31,13 @@ class Client():
 		struct.pack('256s'.encode(), ifname[:15].encode()))[20:24])
 
 	def turnOnLED(self):
+		with open("/sys/class/leds/led0/brightness", "w") as f:
+			f.write('0\n')
 		print("This turns on LED")
 		#time.sleep(5)
 	def turnOffLED(self):
+		with open("/sys/class/leds/led0/brightness", "w") as f:
+			f.write('1\n')
 		print("This turns off LED")
 		#time.sleep(5)
 
