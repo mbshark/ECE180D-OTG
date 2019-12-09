@@ -84,7 +84,7 @@ async def connect():
 	global serv, ipDict, portno, seats, arrangement, ACK
 	serv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	serv.settimeout(10)	
-	serverIP = get_ip_address('wlan0')
+	serverIP = "192.168.0.238"
 	print("This is the SERVER.")
 	print("The server IP address is:", serverIP)
 	serv.bind((serverIP, portno))
