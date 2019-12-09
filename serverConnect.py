@@ -55,8 +55,8 @@ portno = 8080
 k = 0
 seed = 0
 
-TOP = 0
-BOTTOM = 1
+ROW_1 = 0
+ROW_2 = 1
 state = 0
 
 ON = 1
@@ -129,10 +129,10 @@ async def connect():
 		
 def LED_state_machine():
 	global state
-	if (state == TOP):
-		return BOTTOM
-	if (state == BOTTOM):
-		return TOP
+	if (state == ROW_1):
+		return ROW_2
+	if (state == ROW_2):
+		return ROW_1
 	if (state == 'U'):
 		return 'C'
 	if (state == 'C'):
@@ -163,16 +163,16 @@ async def sendClient(msg, pi):
 
 async def sendToClients(state):
 	global seed
-	if (state == TOP):
+	if (state == ROW_1):
 		for pi in addrDict:
-			if (posDict[pi] == "TOP"):
+			if (posDict[pi] == "ROW_1"):
 				await sendClient(ON, pi)
 			else:
 				await sendClient(OFF, pi)
 				
-	elif (state == BOTTOM):
+	elif (state == ROW_2):
 		for pi in addrDict:
-			if (posDict[pi] == "BOTTOM"):
+			if (posDict[pi] == "ROW_2"):
 				await sendClient(ON, pi)
 			else:
 				await sendClient(OFF, pi)
