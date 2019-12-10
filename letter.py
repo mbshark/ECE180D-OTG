@@ -57,6 +57,7 @@ def findC(chart):
 
 
 def findL(charts):
+	best=[]
 	for n in range(0,len(charts)):
 		chart=charts[n]
 		sz=chart.shape
@@ -65,8 +66,9 @@ def findL(charts):
 
 		mscore=0
 
+
 		if x<2 or y<3:
-			print()
+			print("too small")
 		else:
 			for a in range(1,y):
 				for b in range(0,x-1):
@@ -75,13 +77,11 @@ def findL(charts):
 					test[a,0:x-b]=chart[a,b:x]
 					for c in range(2,x-b+1):
 						for d in range(0,a):
-							print(test[d:a+1,0:c])
-							print("***************")
-							print(valL(test[d:a+1,0:c]))
-							print("----------")
-							if valL(test[d:a+1,0:c])>mscore:
+
+							if valL(test[d:a+1,0:c])>mscore or len(best)==0:
 								mscore=valL(test[d:a+1,0:c])
 								best=test[d:a+1,0:c]
+
 	print(best)
 
 def findA():
@@ -131,8 +131,8 @@ def valA():
 
 
 """
-s1=chartGen(4,4,0.8)
-s2=chartGen(3,3,1)
+s1=chartGen(3,4,0.8)
+s2=chartGen(4,3,1)
 s=[]
 s.append(s1)
 s.append(s2)
@@ -143,6 +143,7 @@ print("--------------")
 
 findL(s)
 """
+
 def main():
 	s=chartGen(10,20,1)
 	print(s)
