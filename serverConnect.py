@@ -11,7 +11,7 @@ import random
 import time
 from seatArrangement import getSeatArr
 from letter import findL
-
+from quickstart import getFormResponses
 
 def get_ip_address(ifname):
     try:
@@ -37,13 +37,13 @@ def get_ip_address(ifname):
 # Assigns a port for the server that listens to clients connecting to this port.
 '''
 try:
-	portno = int(input("What port would you like to use for the server? "))
+    portno = int(input("What port would you like to use for the server? "))
 except ValueError:
-	print("This is not a valid number.")
+    print("This is not a valid number.")
 '''
 
 serv = None
-arrangement = None
+arrangement = dict()
 seats = []
 ipDict = dict()
 addrDict = dict()
@@ -51,6 +51,7 @@ posDict = dict()
 
 ackDict = dict()
 waitTime = dict()
+picontot = 3
 
 portno = 8080
 k = 0
@@ -82,7 +83,7 @@ def thr(i):
 
 
 async def connect():
-    global serv, ipDict, portno, seats, arrangement, ACK
+    global serv, ipDict, portno, seats, arrangement, ACK, picontot
     serv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     serv.settimeout(10)
     serverIP = "192.168.43.4"
@@ -119,7 +120,8 @@ async def connect():
 
                 print("Client Closed")
 
-            if len(posDict) >= 4:
+            if len(posDict) >= 4 and len(posDict) > picontot:
+                picontot += 1
                 seats = getSeatArr()
                 # arrangement['U'] = letter.findU(seats)
                 # arrangement['C'] = letter.findC(seats)
@@ -180,10 +182,10 @@ async def sendToClients(state):
             else:
                 await sendClient(OFF, pi)
     elif state == 'L':
-        if arrangement is not None:
-            seed = random.randint(0, len(arrangement['L']) - 1)
+        if len(arrangement) > 0:
+            # seed = random.randint(0, len(arrangement['L']) - 1)
             for pi in addrDict:
-                if arrangement is not None and pi in arrangement['L'][seed].unique():
+                if pi in arrangement['L'][0] or pi in arrangement['L'][1]:
                     await sendClient(ON, pi)
 
                 else:
@@ -228,7 +230,7 @@ async def checkACK():
 
 
 async def arrange():
-    global arrangements, state
+    global arrangement, state
     try:
         while True:
             # if seats:

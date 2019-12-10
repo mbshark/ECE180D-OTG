@@ -87,6 +87,7 @@ def findL(charts):
 	
 	
 	print(best)
+	return best
 
 def findA():
 	best=[]

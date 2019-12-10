@@ -1,10 +1,25 @@
 import numpy
 import random
-#from quickstart import getFormResponses
+from quickstart import getFormResponses
 
 import letter
 
+def getSeatArr():
+	neighbors=[]
+	values = getFormResponses()
+	for row in values:
+		neighbors.append(entry(int(row[1]),int(row[4]),int(row[3]),int(row[5]),int(row[2])))
 
+	#inputs=random.shuffle(inputs)
+
+	seats=makeChart(neighbors)
+
+	if not seats:
+		print("No data found.")
+	print("************SEATING ARRANGEMENT************")
+	print(seats)
+	print("************SEATING ARRANGEMENT************")
+	return seats
 
 def seatGen(x,y,p):
 	seats=numpy.zeros([x,y])
@@ -198,7 +213,7 @@ def findInd(pi,entries):
 
 	return -1
 
-
+"""
 seats=seatGen(4,6,0.8)
 
 seats=numpy.array([[1,2],[3,4]])
@@ -216,7 +231,7 @@ print("-----------")
 s=[]
 s.append(seats)
 letter.findL(s)
-
+"""
 
 """
 for a in numpy.linspace(0,len(n)-1,len(n)):
