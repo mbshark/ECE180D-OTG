@@ -1,6 +1,8 @@
 import numpy
 import random
-from quickstart import getFormResponses
+#from quickstart import getFormResponses
+
+import letter
 
 
 
@@ -197,6 +199,23 @@ def findInd(pi,entries):
 	return -1
 
 
+seats=seatGen(4,6,0.8)
+
+seats=numpy.array([[1,2],[3,4]])
+print(seats)
+print("-----------")
+inputs=retNeighbors(seats)
+output=makeChart(inputs)
+for a in range(0,len(output)):
+	print(output)
+	print("***************")
+letter.findU(output)
+print("-----------")
+letter.findC(output)
+print("-----------")
+s=[]
+s.append(seats)
+letter.findL(s)
 
 
 """
@@ -225,35 +244,49 @@ output=makeChart(inputs)
 print(seats)
 print("***************")
 
-for a in range(0,len(output)):
-	print(output[a])
-	print("--------------")
+
 """
 # seats=seatGen(6,6,0.5)
 # inputs=retNeighbors(seats)
+"""
+neighbors=[]
+values = getFormResponses()
+for row in values:
+	neighbors.append(entry(int(row[1]),int(row[4]),int(row[3]),int(row[5]),int(row[2])))
+"""
+   
+#inputs=random.shuffle(inputs)
+"""
+chart=numpy.matrix([[1,2,3,0,0],[4,5,6,7,8],[9,0,10,0,12],[13,0,0,0,0]])
+neighbors=retNeighbors(chart)
 
-def getSeatArr():
-	neighbors=[]
-	values = getFormResponses()
-	for row in values:
-		neighbors.append(entry(int(row[1]),int(row[4]),int(row[3]),int(row[5]),int(row[2])))
+for a in range(0,len(neighbors)):
+	print(neighbors[a].pi)
+	print(neighbors[a].lf)
+	print(neighbors[a].fr)
+	print(neighbors[a].rt)
+	print(neighbors[a].bk )
+	print("--------------")
 
-	#inputs=random.shuffle(inputs)
+seats=makeChart(neighbors)
 
-	seats=makeChart(neighbors)
+#print(chart)
+print("***************")
+print(seats)
+"""
 
-	if not seats:
-		print("No data found.")
-	print("************SEATING ARRANGEMENT************")
-	print(seats)
-	print("************SEATING ARRANGEMENT************")
-	return seats
-
-def main():
-	getSeatArr()
-
-if __name__ == '__main__':
-    main()
+"""
+s1=seatGen(4,4,0.8)
+s2=seatGen(3,3,1)
+s=[]
+s.append(s1)
+s.append(s2)
+print(s1)
+print("-----------")
+print(s2)
+print("--------------")
+"""
+#letter.findL(s)
 
 
 
