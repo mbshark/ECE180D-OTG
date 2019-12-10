@@ -24,7 +24,7 @@ from google.auth.transport.requests import Request
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = '1NZuMCYhLUDF4r3VToY6wt32XSXYH-JfOEtu1g2vt_QI'
+SAMPLE_SPREADSHEET_ID = '1GlqiwNBpmIrAutMHlQJ2BXQf9ufV30dsEFKqTh0c1_k'
 SAMPLE_RANGE_NAME = 'Form Responses 1!A2:F'
 
 def getFormResponses():
