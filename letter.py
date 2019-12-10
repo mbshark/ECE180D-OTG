@@ -53,31 +53,46 @@ def findC(chart):
 
 				for d in range(2,x-c):
 					print(test[:,0:d])
-					print("***************")
 
 
-def findL(chart):
+
+def findL(charts):
+	for n in range(0,len(charts)):
+		chart=charts[n]
+		sz=chart.shape
+		x=sz[1]
+		y=sz[0]
+
+		mscore=0
+
+		if x<2 or y<3:
+			print()
+		else:
+			for a in range(1,y):
+				for b in range(0,x-1):
+					test=numpy.zeros([a+1,x-b])
+					test[0:a,0:1]=chart[0:a,b:b+1]
+					test[a,0:x-b]=chart[a,b:x]
+					for c in range(2,x-b+1):
+						for d in range(0,a):
+							print(test[d:a+1,0:c])
+							print("***************")
+							print(valL(test[d:a+1,0:c]))
+							print("----------")
+							if valL(test[d:a+1,0:c])>mscore:
+								mscore=valL(test[d:a+1,0:c])
+								best=test[d:a+1,0:c]
+	print(best)
+
+def findA():
 
 	sz=chart.shape
 	x=sz[1]
 	y=sz[0]
 
-	if x<2 or y<3:
+	if x<3 or y<4:
 		return
 
-	for a in range(1,y):
-		for b in range(0,x-1):
-			test=numpy.zeros([a+1,x-b])
-			test[0:a,0]=chart[0:a,b]
-			test[a,0:x-b]=chart[a,b:x]
-			print(test)
-			print("***************")
-			for c in range(2,x-b):
-				for d in range(0,a):
-					print(test[d:a+1,0:c])
-					print("***************")
-
-def findA():
 	for a in range():
 		for b in range():
 			for c in range():
@@ -85,19 +100,49 @@ def findA():
 					print()
 
 def valU():
-	print()
+	sz=chart.shape
+	x=sz[1]
+	y=sz[0]
+
+
+
+
 
 def valC():
-	print()
+	sz=chart.shape
+	x=sz[1]
+	y=sz[0]
 
-def valL():
-	print()
+def valL(chart):
+	sz=chart.shape
+	x=sz[1]
+	y=sz[0]
+
+	pen=min(1.6*x/y,y/(1.6*x))
+
+	val=sum(sum(chart>0))**3/(x+y-1)
+
+	return val*pen
 
 def valA():
-	print()
+	sz=chart.shape
+	x=sz[1]
+	y=sz[0]
 
 
+"""
+s1=chartGen(4,4,0.8)
+s2=chartGen(3,3,1)
+s=[]
+s.append(s1)
+s.append(s2)
+print(s1)
+print("-----------")
+print(s2)
+print("--------------")
 
+findL(s)
+"""
 def main():
 	s=chartGen(10,20,1)
 	print(s)
@@ -107,4 +152,3 @@ def main():
 
 if __name__ == "__main__":
 	main()
-
