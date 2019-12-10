@@ -85,20 +85,24 @@ def findHorizontalAjacencyScore(seatingMatrix):
 		scores.append(best)		
 	return scores
 
-a = [[1, 0],[1, 1]]
+def main():
+	a = [[1, 0],[1, 1]]
 
-test1 = [[1,0,1], [1,1,1], [1,1,0]]
-'''
-101
-111
-110
-'''
-#print(findLetterConfiguration(seatingMatrix, "L"))
-vl1 = findVerticalLineScores(test1)
-hl1 = findHorizontalLineScores(test1)
-va1 = findVerticalAdjacencyScore(test1)
-ha1 = findHorizontalAjacencyScore(test1)
-print(vl1)
-print(hl1)
-print(va1)
-print(ha1)
+	test1 = [[1,0,1], [1,1,1], [1,1,0]]
+	'''
+	101
+	111
+	110
+	'''
+	#print(findLetterConfiguration(seatingMatrix, "L"))
+	vl1 = findVerticalLineScores(test1)
+	hl1 = findHorizontalLineScores(test1)
+	va1 = findVerticalAdjacencyScore(test1)
+	ha1 = findHorizontalAjacencyScore(test1)
+	print(vl1)
+	print(hl1)
+	print(va1)
+	print(ha1)
+
+if __name__ == "__main__":
+	main()

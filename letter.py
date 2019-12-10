@@ -98,9 +98,13 @@ def valA():
 
 
 
-s=chartGen(10,20,1)
-print(s)
-print("--------------")
+def main():
+	s=chartGen(10,20,1)
+	print(s)
+	print("--------------")
 
-findL(s)
+	findL(s)
+
+if __name__ == "__main__":
+	main()
 
