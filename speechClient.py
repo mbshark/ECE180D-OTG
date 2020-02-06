@@ -13,7 +13,7 @@ SPEAKING = 1
 LISTENING = 2
 CLOSED = 3
 
-serverIP = "131.179.47.17"
+serverIP = "172.20.10.8"
 port = 8888
 
 r = None
@@ -24,18 +24,11 @@ class Client():
 		import signal
 		signal.signal(signal.SIGINT, signal.SIG_DFL)
 		self.piNum= num
-		print("Create")
+		self.clientIP = "172.20.10.8"
 		self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		print("connect")
 		self.sock.connect((serverIP,port))
-		print("Sending Hello")
-		#time.sleep(5)
-		self.sock.send("Hello")
-		print("Sent")
-		data = self.sock.recv(1024)
-		self.sock.close()
-		print("received data:", data)
-		self.state = SPEAKING
+		self.sock.send("Hello my IP is: ", self.clientIP)
+		self.state = SETUP
 
 
 	#def get_ip_address(self, ifname):
@@ -46,15 +39,14 @@ class Client():
 	#		struct.pack('256s'.encode(), ifname[:15].encode()))[20:24])
 	
 	def setupServer(self, serverIP):
-		sock = self.sock
-		clientIP = "172.31.53.64"#self.get_ip_address('wlan0')
+		sock = self.sock#self.get_ip_address('wlan0')
 		#Test print of IP address
 		print("This is the CLIENT.")
-		print ("The client IP address is:", clientIP)
-		init_msg = pickle.dumps((self.piNum, clientIP))		
+		print ("The client IP address is:", self.clientIP)
+		#init_msg = pickle.dumps((self.piNum, clientIP))		
 		print("The server IP address is: ", serverIP)
 
-		sock.sendto(init_msg,(serverIP,8888))
+		#sock.sendto(init_msg,(serverIP,8888))
 
 	def setupSpeech(self):
 		global r, m 
@@ -69,7 +61,7 @@ class Client():
 
 	def runClient(self):
 		sock = self.sock
-		ack = pickle.dumps((self.piNum))
+		ack = str(self.piNum)
 		try:
 			try:
 				while True:
@@ -79,24 +71,34 @@ class Client():
 						
 						
 						if (self.state == SETUP):
-							data,addr = sock.recvfrom(4096)
+							'''data,addr = sock.recvfrom(4096)
 							if not data: 
 								print('No data')
 								break
 							r_ip, r_piNum, resp =  pickle.loads(data)
 							print('Pi#: ', r_piNum)
 							print('Client IP: ', r_ip)
-							print('Server response: ', resp)
+							print('Server response: ', resp)'''
 							self.state = SPEAKING
 						elif (self.state == SPEAKING):
 							command = self.speak()
-							msg = pickle.dumps((self.piNum, command))
-							sock.sendto(msg,(serverIP,8888))
+							msg = str(command)#pickle.dumps((self.piNum, command))
+							if (msg == "pause"):
+		                        print("Player wants to PAUSE the game")
+		                        sock.send(msg) 		                        
+		                    elif (msg == "play"):
+		                        print("Player wants to play the game")
+		                        sock.send(msg)
+		                    elif (msg == "hint"):
+		                        print("Player wants a hint")   
+		                        sock.send(msg)
+		                    else:
+		                        print("Not a real command to send")
 							print("Sent ", command)
-							self.state = LISTENING
+							self.state = SPEAKING
 						elif (self.state == LISTENING):
 							print("LISTENING MODE")
-							data,addr = sock.recvfrom(4096)
+							data,addr = sock.recv(1024)
 							if not data: 
 								print('No data')
 								break
