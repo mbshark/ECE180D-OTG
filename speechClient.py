@@ -13,8 +13,9 @@ SPEAKING = 1
 LISTENING = 2
 CLOSED = 3
 
-serverIP = "172.20.10.8"
-port = 8888
+serverIP = ""
+port = 5004
+
 
 r = None
 m = None
@@ -24,7 +25,7 @@ class Client():
 		import signal
 		signal.signal(signal.SIGINT, signal.SIG_DFL)
 		self.piNum= num
-		self.clientIP = "172.20.10.8"
+		self.clientIP = "192.168.43.3"
 		self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.sock.connect((serverIP,port))
 		self.sock.send("Hello my IP is: ", self.clientIP)
@@ -91,7 +92,7 @@ class Client():
 		                        sock.send(msg)
 		                    elif (msg == "hint"):
 		                        print("Player wants a hint")   
-		                        sock.send(msg)
+		                        sock.send("S"+ msg)
 		                    else:
 		                        print("Not a real command to send")
 							print("Sent ", command)
@@ -104,7 +105,7 @@ class Client():
 								break
 							resp =  pickle.loads(data)
 							print("Received ", resp)	
-							self.state = SPEAKING		
+							self.state = SPEAKING	
 				#ack_msg = pickle.dumps((self.piNum, "ACK"))
 				#sock.sendto(ack_msg,(serverIP,8080))
 				self.state = CLOSED
