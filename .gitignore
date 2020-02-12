@@ -5,3 +5,5 @@ credentials.json
 __pycache__/quickstart.cpython-37.pyc
 __pycache__/seatArrangement.cpython-37.pyc
 *.pyc
+__pycache__/seatArrangement.cpython-37.pyc
+*.pyc
