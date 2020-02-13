@@ -1,10 +1,17 @@
 import cv2
 import numpy as np
+import socket
 
+# TCP Communication instantiation
+TCP_IP = '192.168.1.184'    #IP address on Server
+TCP_PORT = 5005             #same port number as server
+BUFFER_SIZE = 1024          
 
+# Creqte and connect to the socket
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((TCP_IP, TCP_PORT))
 
-def nothing(x):
-    # any operation
+def nothing():
     pass
 
 cap = cv2.VideoCapture(0)
@@ -57,9 +64,14 @@ while True:
 
             if len(approx) == 3:
                 if x >= 750:
-                     cv2.putText(frame, "Triangle on Left"+str(x)+", "+str(y), (x, y), font, 1, (0, 255, 0))
+                     tri = "Triangle on Left"+str(x)+", "+str(y)
+                     cv2.putText(frame, tri, (x, y), font, 1, (0, 255, 0))
                 else:
-                     cv2.putText(frame, "Triangle on Right"+str(x)+", "+str(y), (x, y), font, 1, (255, 0, 0))
+                     tri = "Triangle on Right"+str(x)+", "+str(y)
+                     cv2.putText(frame, tri, (x, y), font, 1, (255, 0, 0))
+                tri = "I"+tri
+                print(tri)
+                s.send((tri).encode())
             elif len(approx) == 4:
                 cv2.putText(frame, "Rectangle", (x, y), font, 1, (0, 0, 0))
             # elif 10 < len(approx) < 20:
@@ -68,7 +80,7 @@ while True:
 
 
     cv2.imshow("Frame", frame)
-    cv2.imshow("Mask", mask)
+    #cv2.imshow("Mask", mask)
 
     key = cv2.waitKey(1)
     if key == 27:
