@@ -7,3 +7,7 @@ __pycache__/seatArrangement.cpython-37.pyc
 *.pyc
 __pycache__/seatArrangement.cpython-37.pyc
 *.pyc
+*.avi
+clientConnect1.py
+clientConnect2.py
+clientConnect3.py
