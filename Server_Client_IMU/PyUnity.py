@@ -14,36 +14,73 @@ BUFFER_SIZE = 1024
 TCP_IP = 'localhost'#'192.168.1.12'		#IP address on Server
 TCP_PORT_UNITY = 50000		#same port number as server
 TCP_PORT_IMU = 50005
-NUM_THREADS = 4
+NUM_THREADS = 5
 UNITY_CONNECTED = True
 IMU_CONNECTED = True
 
+NUM_IMUS = 2
 
 last_time_sent = 0
 last_time_received = 0
 imu_dict = {"1": "R1,P1", "2":"R2,P2", "3":"R3,P3"}
+conns = []
 speech_cmd = ""
 image_buf = ""
 unity_connect = None
 s = None
 conn = None
+imus_available = False
+server_available = False
 
 r = None
 m = None
 
-def setupConnections():
-	global unity_connect, s, conn
+async def setupConnections():
+	global unity_connect, s, conn,imus_available, server_available
 	if UNITY_CONNECTED:
 		print("Connect to Unity")
 		unity_connect = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		unity_connect.connect((TCP_IP, TCP_PORT_UNITY))
+		server_available = True
+	
 	if IMU_CONNECTED:
-		print("Setup IMU client connection")
-		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		s.bind((TCP_IP, TCP_PORT_IMU))
-		s.listen(1)
-		conn, addr = s.accept()
-		print ('IMU Connection address:', addr)
+		imus = 0
+		while imus != NUM_IMUS:
+			print("Setup IMU client connection")
+			s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			s.bind((TCP_IP, TCP_PORT_IMU))
+			s.listen(1)
+			conn, addr = s.accept()
+			conns.append(conn)
+			print ('IMU Connection address:', addr)
+			imus_available = True
+			imus+=1
+			await asyncio.sleep(random.uniform(0.1,0.1))
+
+async def receiveIMUData(): 
+	global last_time_received, conn, s
+	
+	while True:  
+		if IMU_CONNECTED and imus_available:
+				for conn in conns:
+					data = conn.recv(BUFFER_SIZE)
+					if not data: break
+					msg = data.decode()
+					#print ("received data:", msg)
+					index = msg[0]
+					#print(index)
+					imu_data = msg[1:]
+					#print(imu_data)
+					imu_dict[index] = imu_data
+					#print(imu_dict)
+
+		time_received = time.time()
+		#print("Receiving :", time_received - last_time_received)
+		last_time_received = time_received
+		await asyncio.sleep(random.uniform(0.1,0.5))
+	if IMU_CONNECTED:
+		conn.close()
+		s.close()
 
 def setupSpeech():
 		global r, m 
@@ -80,23 +117,6 @@ async def speak():
 		except KeyboardInterrupt:
 			pass
 
-def thr(i):
-	# we need to create a new loop for the thread, and set it as the 'default'
-	# loop that will be returned by calls to asyncio.get_event_loop() from this
-	# thread.
-	loop = asyncio.new_event_loop()
-	asyncio.set_event_loop(loop)
-	if (i == 0):
-		loop.run_until_complete(receiveIMUData())
-	elif (i == 1):
-		loop.run_until_complete(receiveSpeechData())
-	elif (i == 2 ):
-		loop.run_until_complete(receiveImageData())
-	elif (i == 3):
-		loop.run_until_complete(sendToUnity())
-	loop.close()
-
-
 async def receiveSpeechData():
 	global speech_cmd
 	while True:
@@ -130,34 +150,6 @@ async def receiveImageData():
 		i+=1
 		await asyncio.sleep(random.uniform(0.1,0.5))
 
-
-async def receiveIMUData(): 
-	global last_time_received, conn, s
-	
-	while True:  
-		if IMU_CONNECTED:
-			data = conn.recv(BUFFER_SIZE)
-			if not data: break
-			msg = data.decode()
-			#print ("received data:", msg)
-			index = msg[0]
-			#print(index)
-			imu_data = msg[1:]
-			#print(imu_data)
-			imu_dict[index] = imu_data
-			#print(imu_dict)
-
-		time_received = time.time()
-		#print("Receiving :", time_received - last_time_received)
-		last_time_received = time_received
-		await asyncio.sleep(random.uniform(0.1,0.5))
-	if IMU_CONNECTED:
-		conn.close()
-		s.close()
-
-
-
-
 async def sendToUnity():
 	global imu_dict, last_time_sent, image_buf, speech_cmd, unity_connect
 	while True:		
@@ -172,7 +164,7 @@ async def sendToUnity():
 			image_buf)
 		#print(packet)
 		#print("Send to Unity: ", time_sent-last_time_sent)
-		if UNITY_CONNECTED:
+		if UNITY_CONNECTED and server_available:
 			unity_connect.send(packet.encode())
 		image_buf = ""
 		speech_cmd = ""
@@ -181,6 +173,25 @@ async def sendToUnity():
 	if UNITY_CONNECTED:
 		unity_connect.close()
 
+def thr(i):
+	# we need to create a new loop for the thread, and set it as the 'default'
+	# loop that will be returned by calls to asyncio.get_event_loop() from this
+	# thread.
+	loop = asyncio.new_event_loop()
+	asyncio.set_event_loop(loop)
+	if (i==0):
+		loop.run_until_complete(setupConnections())
+	elif (i == 1):
+		loop.run_until_complete(receiveIMUData())
+	elif (i == 2):
+		loop.run_until_complete(receiveSpeechData())
+	elif (i == 3 ):
+		loop.run_until_complete(receiveImageData())
+	elif (i == 4):
+		loop.run_until_complete(sendToUnity())
+
+	loop.close()
+
 
 def main():
 	global last_time_sent, last_time_received
@@ -188,7 +199,6 @@ def main():
 	signal.signal(signal.SIGINT, signal.SIG_DFL)
 	last_time_sent = time.time()
 	last_time_received= time.time()
-	setupConnections()
 	setupSpeech()
 	threads = [threading.Thread(target=thr, args=(i,)) for i in range(NUM_THREADS)]
 	[t.start() for t in threads]

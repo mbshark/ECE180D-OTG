@@ -13,7 +13,7 @@ s.connect((TCP_IP, TCP_PORT_IMU))
 
 f = open("FakeIMU.txt", "r")
 print(f.readline())
-Pi_num = 1
+Pi_num = 2
 while True:  
 	
 	# reads data from serial port and passes through
