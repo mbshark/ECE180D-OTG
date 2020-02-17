@@ -1,55 +1,70 @@
 import socket
 import serial
+import time
 
-# Serial Communication instantiation
-BUFFER_SIZE = 1024    
+#*********************************************************
 # TCP Communication instantiation for unity
-TCP_IP = '131.179.46.131'    #IP address on Server
-TCP_PORT_UNITY = 5005        #same port number as server
-TCP_PORT = 5003
-TCP_PORT_speech = 5000
+#*********************************************************
+#TCP_IP = '192.168.1.184'         # IP address on Server
+TCP_IP = '172.20.10.7'
+TCP_PORT_UNITY = 5005           # same port number as server
+BUFFER_SIZE = 20                # Serial Communication instantiation
+
+# ********************************************************
+# Connection for IMUs PORTs
+# ********************************************************
+player_1_PORT = 5003
 
 
 
- # Create and connect to the socket
-unity_connect = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-unity_connect.connect((TCP_IP, TCP_PORT_UNITY))
 
-# create the IMU TCP Connection
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((TCP_IP, TCP_PORT))
-s.listen(1)
+# ********************************************************
+# Player Helper Function
+# ********************************************************
+def TCPConnectInit(port):
+    # create the IMU TCP Connection
+    player = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    player.bind((TCP_IP, port))
+    player.listen(1)
+
+    return player
+
+#Connects to players 
+def player_connect(player):
+    print ("Waiting for IMU Connection.....")
+    player_conn, player_addr = player.accept()
+
+    return player_conn, player_addr
 
 
-# create the speech TCP Connection
-a = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-a.bind((TCP_IP, TCP_PORT_speech))
-a.listen(1)
 
-print ("Waiting for IMU Connection.....")
 
-conn, addr = s.accept()
-conn_spe,add_spe = a.accept()
-print ('IMU Connection address:', addr)
-print ('speech Connection address:', add_spe)
 
-while True:  
-    
-    # reads data from serial port and passes through
-    # TCP connection
 
-    data = conn.recv(BUFFER_SIZE)
-    speech = conn_spe.recv(BUFFER_SIZE)
-    
-    data = data + speech
-    if not data: break
-    if not speech: break
-    print ("received data:", data)
-    unity_connect.send(data)
-    
-    print(speech)
+if __name__ == "__main__":
+    # init TCP connections 
+    #unity = TCPConnectInit(TCP_PORT_UNITY)
+    player_1 = TCPConnectInit(player_1_PORT)
 
-    
-unit_connect.close()
-conn.close()
-conn_spe.close()
+    # connect to players
+    player_1_conn, player_1_addr = player_connect(player_1)
+    print("Player 1 connected")
+
+    while True:          
+        # reads data from serial port and passes through
+        # TCP connection
+        data = player_1_conn.recv(BUFFER_SIZE)
+        data = data.decode('utf-8')             # decodes data from byte to string
+        data = data.replace("\r\n","")      # cleans data as it contains "\r\n"
+        # non latency data
+        data_splt = data.split(",")
+        #print(data_splt[0])
+        #print(type(data_splt[0]))
+        if (len(data_splt)==3 and data_splt[0]=='1'):
+            #data = data.replace("\r\n","")      # cleans data as it contains "\r\n"
+            data_bytes = data.encode('utf-8')
+            print(data_bytes)
+            #unity_connect.send(data)   
+        
+    #unit_connect.close()
+    player_1_conn.close()
