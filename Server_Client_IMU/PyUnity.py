@@ -11,11 +11,12 @@ import speech_recognition as sr
 # Serial Communication instantiation
 BUFFER_SIZE = 1024    
 # TCP Communication instantiation for unity
-TCP_IP = '192.168.1.12'		#IP address on Server
-TCP_PORT_UNITY = 5005		#same port number as server
-TCP_PORT_IMU = 5003
+TCP_IP = 'localhost'#'192.168.1.12'		#IP address on Server
+TCP_PORT_UNITY = 50000		#same port number as server
+TCP_PORT_IMU = 50005
 NUM_THREADS = 4
-CONNECTED = True
+UNITY_CONNECTED = True
+IMU_CONNECTED = True
 
 
 last_time_sent = 0
@@ -32,10 +33,12 @@ m = None
 
 def setupConnections():
 	global unity_connect, s, conn
-	if CONNECTED:
+	if UNITY_CONNECTED:
+		print("Connect to Unity")
 		unity_connect = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		unity_connect.connect((TCP_IP, TCP_PORT_UNITY))
-	
+	if IMU_CONNECTED:
+		print("Setup IMU client connection")
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.bind((TCP_IP, TCP_PORT_IMU))
 		s.listen(1)
@@ -132,19 +135,23 @@ async def receiveIMUData():
 	global last_time_received, conn, s
 	
 	while True:  
-		if CONNECTED:
+		if IMU_CONNECTED:
 			data = conn.recv(BUFFER_SIZE)
 			if not data: break
-			print ("received data:", data)
-			index = data[0]
-			imu_data = data[1:]
+			msg = data.decode()
+			#print ("received data:", msg)
+			index = msg[0]
+			#print(index)
+			imu_data = msg[1:]
+			#print(imu_data)
 			imu_dict[index] = imu_data
+			#print(imu_dict)
 
 		time_received = time.time()
 		#print("Receiving :", time_received - last_time_received)
 		last_time_received = time_received
 		await asyncio.sleep(random.uniform(0.1,0.5))
-	if CONNECTED:
+	if IMU_CONNECTED:
 		conn.close()
 		s.close()
 
@@ -163,15 +170,15 @@ async def sendToUnity():
 			imu_dict["3"],
 			speech_cmd,
 			image_buf)
-		print(packet)
+		#print(packet)
 		#print("Send to Unity: ", time_sent-last_time_sent)
-		if CONNECTED:
+		if UNITY_CONNECTED:
 			unity_connect.send(packet.encode())
 		image_buf = ""
 		speech_cmd = ""
 		last_time_sent = time_sent
 		await asyncio.sleep(random.uniform(0.5,0.5))
-	if CONNECTED:
+	if UNITY_CONNECTED:
 		unity_connect.close()
 
 
