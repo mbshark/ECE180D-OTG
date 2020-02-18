@@ -6,22 +6,24 @@ import threading
 import random
 import time
 import speech_recognition as sr
+import realtime_shape_detection as rt
+
 dir(sr)
 
 #GLOBAL CONSTANTS
 # Serial Communication instantiation
-BUFFER_SIZE = 1024    
+BUFFER_SIZE = 1024
 # TCP Communication instantiation for unity
-TCP_IP = 'localhost'#'192.168.1.12'		#IP address on Server
-#TCP_IP = '172.20.10.7'
+
+#TCP_IP = 'localhost'#'192.168.1.12'		#IP address on Server
+TCP_IP = '192.168.43.3'
 TCP_PORT_UNITY = 50000		#same port number as server
 TCP_PORT_IMU = 50005
 NUM_THREADS = 5
-UNITY_CONNECTED = True
-IMU_CONNECTED = True
+UNITY_CONNECTED = False
+IMU_CONNECTED = False
 
-NUM_IMUS = 4
-
+NUM_IMUS = 2
 last_time_sent = 0
 last_time_received = 0
 imu_dict = {"1": "R1,P1", "2":"R2,P2", "3":"R3,P3", "4":"R4,P4"}
@@ -43,7 +45,7 @@ async def setupConnections():
 		unity_connect = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		unity_connect.connect((TCP_IP, TCP_PORT_UNITY))
 		server_available = True
-	
+
 	if IMU_CONNECTED:
 		imus = 0
 		while imus != NUM_IMUS:
@@ -57,16 +59,16 @@ async def setupConnections():
 			imus+=1
 			await asyncio.sleep(random.uniform(0.1,0.1))
 
-async def receiveIMUData(): 
+async def receiveIMUData():
 	global last_time_received, s
-	
-	while True:  	
+
+	while True:
 		if IMU_CONNECTED and imus_available:
 				for conn in conns:
 					data = conn.recv(BUFFER_SIZE)
 					data = data.decode('utf-8')             # decodes data from byte to string
 					data = data.replace("\r\n","")      	# cleans data as it contains "\r\n"
-					# checks identifier of data type 
+					# checks identifier of data type
 					if (data[0] >= '1' and data[0] <='4'):
 						data_splt = data.split(",")
 						#print(data_splt)
@@ -86,7 +88,7 @@ async def receiveIMUData():
 		s.close()
 
 def setupSpeech():
-		global r, m 
+		global r, m
 		r = sr.Recognizer()
 		m = sr.Microphone()
 		try:
@@ -124,8 +126,8 @@ async def receiveSpeechData():
 	global speech_cmd
 	while True:
 		command = await speak()
-		msg = str(command)	
-		valid = True	
+		msg = str(command)
+		valid = True
 		if (msg == "pause"):
 			print("Player wants to PAUSE the game")
 		elif (msg == "play"):
@@ -140,26 +142,36 @@ async def receiveSpeechData():
 		await asyncio.sleep(random.uniform(0.1,0.1))
 
 
-
-
 async def receiveImageData():
 	global image_buf
-	temp_dict = {0: "T,1", 1:"R,2",2:"R,3", 3: "R,4"}
 	i = 0
+	try:
+		rt.setup()
+	except:
+		print("Setting up failed")
+	await rt.run()
+	'''
 	while True:
 		#print("image")
 		#Possible Race Condition?
+		#data = rt.image_data
+		print()
 		image_buf += temp_dict[i%4]
 		i+=1
-		await asyncio.sleep(random.uniform(0.1,0.5))
+	'''
 
 async def sendToUnity():
 	global imu_dict, last_time_sent, image_buf, speech_cmd, unity_connect
-	while True:		
+	while True:
 		time_sent = time.time()
 		packet = ""
 		#Create Packet
 		#print(imu_dict["1"])
+		print(rt.image_data)
+		'''
+		set image buf to what you need it to be
+		avoid *
+		'''
 		packet = "{}*{}*{}*{}*{}*{}".format(
 			imu_dict["1"],
 			imu_dict["2"],
@@ -168,6 +180,7 @@ async def sendToUnity():
 			speech_cmd,
 			image_buf)
 		#print("Send to Unity: ", time_sent-last_time_sent)
+		print(packet)
 		if UNITY_CONNECTED and server_available:
 			unity_connect.send(packet.encode())
 		image_buf = ""
