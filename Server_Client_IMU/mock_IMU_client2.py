@@ -22,7 +22,7 @@ while True:
 	#print(ser_bytes)
 	for ser_bytes in f:
 		print(ser_bytes)
-		msg = str(Pi_num) + ser_bytes[0:len(ser_bytes)-1]
+		msg = str(Pi_num) + "," + ser_bytes[0:len(ser_bytes)-1]
 		s.send(msg.encode())
 		time.sleep(0.5)
 
