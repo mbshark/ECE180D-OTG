@@ -13,7 +13,7 @@ s.connect((TCP_IP, TCP_PORT_IMU))
 
 f = open("FakeIMU.txt", "r")
 print(f.readline())
-Pi_num = 1
+Pi_num = 3
 while True:  
 	
 	# reads data from serial port and passes through
@@ -22,7 +22,7 @@ while True:
 	#print(ser_bytes)
 	for ser_bytes in f:
 		print(ser_bytes)
-		msg = str(Pi_num) +","+ ser_bytes[0:len(ser_bytes)-1]
+		msg = str(Pi_num) + "," + ser_bytes[0:len(ser_bytes)-1]
 		s.send(msg.encode())
 		time.sleep(0.5)
 

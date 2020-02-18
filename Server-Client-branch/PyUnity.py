@@ -12,25 +12,24 @@ dir(sr)
 # Serial Communication instantiation
 BUFFER_SIZE = 1024    
 # TCP Communication instantiation for unity
-#TCP_IP = 'localhost'#'192.168.1.12'		#IP address on Server
-TCP_IP = '172.20.10.7'
+TCP_IP = 'localhost'#'192.168.1.12'		#IP address on Server
+#TCP_IP = '172.20.10.7'
 TCP_PORT_UNITY = 50000		#same port number as server
 TCP_PORT_IMU = 50005
 NUM_THREADS = 5
 UNITY_CONNECTED = True
 IMU_CONNECTED = True
 
-NUM_IMUS = 2
+NUM_IMUS = 4
 
 last_time_sent = 0
 last_time_received = 0
-imu_dict = {"1": "R1,P1", "2":"R2,P2", "3":"R3,P3"}
+imu_dict = {"1": "R1,P1", "2":"R2,P2", "3":"R3,P3", "4":"R4,P4"}
 conns = []
 speech_cmd = ""
 image_buf = ""
 unity_connect = None
 s = None
-conn = None
 imus_available = False
 server_available = False
 
@@ -38,7 +37,7 @@ r = None
 m = None
 
 async def setupConnections():
-	global unity_connect, s, conn,imus_available, server_available
+	global unity_connect, s, imus_available, server_available
 	if UNITY_CONNECTED:
 		print("Connect to Unity")
 		unity_connect = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -52,13 +51,14 @@ async def setupConnections():
 			s.bind((TCP_IP, TCP_PORT_IMU))
 			s.listen(1)
 			conn, addr = s.accept()
+			print("New IMU addr: ", addr)
 			conns.append(conn)
 			imus_available = True
 			imus+=1
 			await asyncio.sleep(random.uniform(0.1,0.1))
 
 async def receiveIMUData(): 
-	global last_time_received, conn, s
+	global last_time_received, s
 	
 	while True:  	
 		if IMU_CONNECTED and imus_available:
@@ -67,7 +67,7 @@ async def receiveIMUData():
 					data = data.decode('utf-8')             # decodes data from byte to string
 					data = data.replace("\r\n","")      	# cleans data as it contains "\r\n"
 					# checks identifier of data type 
-					if (data[0] == '1' or data[0] =='2'):
+					if (data[0] >= '1' and data[0] <='4'):
 						data_splt = data.split(",")
 						#print(data_splt)
 						index = data_splt[0]
@@ -160,10 +160,11 @@ async def sendToUnity():
 		packet = ""
 		#Create Packet
 		#print(imu_dict["1"])
-		packet = "{}*{}*{}*{}*{}".format(
+		packet = "{}*{}*{}*{}*{}*{}".format(
 			imu_dict["1"],
 			imu_dict["2"],
 			imu_dict["3"],
+			imu_dict["4"],
 			speech_cmd,
 			image_buf)
 		#print("Send to Unity: ", time_sent-last_time_sent)
