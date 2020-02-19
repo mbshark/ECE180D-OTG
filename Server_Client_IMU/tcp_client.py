@@ -1,20 +1,23 @@
+
 import socket
 import serial
-
+import time
 # Serial Communication instantiation
-port = 'COM5'
+port = '/dev/ttyUSB0'
 baud = 115200
 ser = serial.Serial(port, baud)
 ser.flushInput()
 
 # TCP Communication instantiation
-TCP_IP = '192.168.1.67'    #IP address on Server
-TCP_PORT = 5003             #same port number as server
+#TCP_IP = '192.168.1.184'    #IP address on Server
+TCP_IP = '172.20.10.7'
+TCP_PORT = 50005             #same port number as server
 BUFFER_SIZE = 20
 
  # Creqte and connect to the socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((TCP_IP, TCP_PORT))
+
 while True:  
 	if(ser.in_waiting >0):
 		data= ser.readline()
@@ -25,7 +28,7 @@ while True:
 		
 		print(data)
 		s.send(data)
-    
+#    		time.sleep(0.1)
     # reads data from serial port and passes through
     # TCP connection
     #ser_bytes = ser.readline()
