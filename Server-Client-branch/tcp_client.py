@@ -2,14 +2,15 @@ import socket
 import serial
 
 # Serial Communication instantiation
-port = 'COM5'
+port = '/dev/ttyUSB0'
 baud = 115200
 ser = serial.Serial(port, baud)
 ser.flushInput()
 
 # TCP Communication instantiation
-TCP_IP = '192.168.1.67'    #IP address on Server
-TCP_PORT = 5003             #same port number as server
+#TCP_IP = '192.168.1.67'    #IP address on Server
+TCP_IP = '172.20.10.7'
+TCP_PORT = 50005             #same port number as server
 BUFFER_SIZE = 20
 
  # Creqte and connect to the socket
