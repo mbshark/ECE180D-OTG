@@ -145,11 +145,12 @@ async def receiveSpeechData():
 async def receiveImageData():
 	global image_buf
 	i = 0
-	try:
-		rt.setup()
-	except:
-		print("Setting up failed")
+	#try:
+	rt.setup()
+	#except:
+	#	print("Setting up failed")
 	await rt.run()
+	rt.cv2.imshow("Frame", rt.frame)
 	'''
 	while True:
 		#print("image")
@@ -167,11 +168,16 @@ async def sendToUnity():
 		packet = ""
 		#Create Packet
 		#print(imu_dict["1"])
-		print(rt.image_data)
 		'''
 		set image buf to what you need it to be
 		avoid *
+
 		'''
+		msg = ""
+		for key in rt.image_data:
+			for quad in rt.image_data[key]:
+				shp = "({},{})".format(key, quad)
+				image_buf+=shp
 		packet = "{}*{}*{}*{}*{}*{}".format(
 			imu_dict["1"],
 			imu_dict["2"],
