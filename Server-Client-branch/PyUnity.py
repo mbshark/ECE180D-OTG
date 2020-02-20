@@ -57,7 +57,7 @@ async def setupConnections():
 			conns.append(conn)
 			imus_available = True
 			imus+=1
-			await asyncio.sleep(random.uniform(0.1,0.1))
+			await asyncio.sleep(random.uniform(0.1,0.2))
 
 async def receiveIMUData():
 	global last_time_received, s
@@ -82,7 +82,7 @@ async def receiveIMUData():
 		time_received = time.time()
 		#print("Receiving :", time_received - last_time_received)
 		last_time_received = time_received
-		await asyncio.sleep(random.uniform(0.1,0.5))
+		await asyncio.sleep(random.uniform(0.1,0.2))
 	if IMU_CONNECTED:
 		conn.close()
 		s.close()
@@ -102,9 +102,10 @@ async def speak():
 		global r,m
 		try:
 			while True:
-				#print("Speaking Mode")
-				with m as source: audio = r.listen(source)
-				#print("Processing")
+				print("Speaking Mode")
+				with m as source: 
+					audio = r.listen(source,phrase_time_limit=3)
+				print("Processing")
 				try:
 					# recognize speech using Google Web Speech
 					value = r.recognize_google(audio)
@@ -124,22 +125,17 @@ async def speak():
 
 async def receiveSpeechData():
 	global speech_cmd
+	commands = ["pause", "play", "hint", "unlock"]
 	while True:
 		command = await speak()
-		msg = str(command)
-		valid = True
-		if (msg == "pause"):
-			print("Player wants to PAUSE the game")
-		elif (msg == "play"):
-			print("Player wants to play the game")
-		elif (msg == "hint"):
-			print("Player wants a hint")
-		else:
-			print("Not a real command to send")
-			valid = False
-		if valid:
-			speech_cmd = msg
-		await asyncio.sleep(random.uniform(0.1,0.1))
+		msg_arr= (str(command)).split(" ")
+		
+		for msg in msg_arr:
+			if msg.lower() in commands:
+				print("Player said ", msg)
+				speech_cmd = msg
+				break
+		await asyncio.sleep(random.uniform(0.1,0.2))
 
 
 async def receiveImageData():
@@ -150,7 +146,6 @@ async def receiveImageData():
 	#except:
 	#	print("Setting up failed")
 	await rt.run()
-	rt.cv2.imshow("Frame", rt.frame)
 	'''
 	while True:
 		#print("image")
@@ -192,7 +187,7 @@ async def sendToUnity():
 		image_buf = ""
 		speech_cmd = ""
 		last_time_sent = time_sent
-		await asyncio.sleep(random.uniform(0.5,0.5))
+		await asyncio.sleep(random.uniform(0.2,0.5))
 	if UNITY_CONNECTED:
 		unity_connect.close()
 
