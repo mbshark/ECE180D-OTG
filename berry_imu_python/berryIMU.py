@@ -23,9 +23,11 @@ IMU.detectIMU()     #Detect if BerryIMUv1 or BerryIMUv2 is connected.
 IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
 # resolutions for accel, gyro, and mag data
-aRes = 0.000263
-gRes = 0.0477
-mRes = 0.000489
+aRes = 0.00021
+gxRes = 0.023
+gyRes = 0.038
+gzRes = 0.00787
+mRes = 0.0003
 
 
 def MadgwickQuaternionUpdate(ax,ay,az,gx,gy,gz,mx,my,mz):
@@ -163,16 +165,17 @@ while True:
     #Scales the data based off precalculated values 
     ax = ACCx*aRes
     ay = ACCy*aRes
-    az = ACCz*aRes
+    az = -1*ACCz*aRes
 
-    gx = GYRx*gRes
-    gy = GYRy*gRes
-    gz = GYRz*gRes
+    gx = -1*GYRx*gxRes
+    gy = -1*GYRy*gyRes
+    gz = GYRz*gzRes
 
-    mx = MAGx*mRes
-    my = MAGy*mRes
+    mx = -1*MAGx*mRes
+    my = MAGy*mRes - 0.35 # without offset range is [-0.11,1.2] when it is sppose to be [-0.5,0.5]
     mz = MAGz*mRes
 
+    '''
     val = ax
     if (val > 0):
         print("++")
@@ -184,6 +187,7 @@ while True:
     if (currmin > val):
         currmin = val
     print(str(currmax)+","+str(currmin))
+    '''
 
     
     #time vector
@@ -202,7 +206,7 @@ while True:
     roll  *= float(180.0) / math.pi
 
 
-    #print(str(roll) + "," + str(pitch))
+    print(str(roll) + "," + str(pitch))
 
 
 
