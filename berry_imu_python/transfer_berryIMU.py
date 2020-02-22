@@ -29,8 +29,8 @@ q = [float(1.0),float(0.0),float(0.0),float(0.0)]
 
 
 
-IMU.detectIMU()     #Detect if BerryIMUv1 or BerryIMUv2 is connected.
-IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
+#IMU.detectIMU()     #Detect if BerryIMUv1 or BerryIMUv2 is connected.
+#IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
 # resolutions for accel, gyro, and mag data
 aRes = 0.00021
