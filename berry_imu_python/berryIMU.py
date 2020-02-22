@@ -27,10 +27,11 @@ aRes = 0.000263
 gRes = 0.0477
 mRes = 0.000489
 
-'''
+
 def MadgwickQuaternionUpdate(ax,ay,az,gx,gy,gz,mx,my,mz)
 {
-    float q1 = q[0], q2 = q[1], q3 = q[2], q4 = q[3];   // short name local variable for readability
+    q1 = q[0], q2 = q[1], q3 = q[2], q4 = q[3];   // short name local variable for readability
+    '''
     float norm;
     float hx, hy, _2bx, _2bz;
     float s1, s2, s3, s4;
@@ -117,9 +118,9 @@ def MadgwickQuaternionUpdate(ax,ay,az,gx,gy,gz,mx,my,mz)
     q[1] = q2 * norm;
     q[2] = q3 * norm;
     q[3] = q4 * norm;
-
+    '''
 }
-'''
+
 
 
 while True:
@@ -151,7 +152,7 @@ while True:
 
     #time vector
     b = datetime.datetime.now()    
-    Now = b.microseconds
+    Now = b.microsecond
     deltat=((Now - lastUpdate)/float(1000000.0))
     lastUpdate = b.microseconds
     
