@@ -141,6 +141,8 @@ def MadgwickQuaternionUpdate(ax,ay,az,gx,gy,gz,mx,my,mz):
     q[3] = q4 * norm
     
 
+currmax = 0.0
+currmin = 0.0
 
 
 while True:
@@ -156,20 +158,34 @@ while True:
     MAGx = IMU.readMAGx()
     MAGy = IMU.readMAGy()
     MAGz = IMU.readMAGz()
+    
 
     #Scales the data based off precalculated values 
     ax = ACCx*aRes
     ay = ACCy*aRes
-    az = -1*ACCz*aRes
+    az = ACCz*aRes
 
-    gx = -1*GYRx*gRes
-    gy = -1*GYRy*gRes
+    gx = GYRx*gRes
+    gy = GYRy*gRes
     gz = GYRz*gRes
 
-    mx = -1*MAGx*mRes
+    mx = MAGx*mRes
     my = MAGy*mRes
     mz = MAGz*mRes
 
+    val = ax
+    if (val > 0):
+        print("++")
+    else:
+        print("--")
+
+    if (currmax < val):
+        currmax = val
+    if (currmin > val):
+        currmin = val
+    print(str(currmax)+","+str(currmin))
+
+    
     #time vector
     b = datetime.datetime.now()    
     Now = b.microsecond
@@ -186,7 +202,7 @@ while True:
     roll  *= float(180.0) / math.pi
 
 
-    print(str(roll) + "," + str(pitch))
+    #print(str(roll) + "," + str(pitch))
 
 
 
