@@ -79,7 +79,7 @@ def MadgwickQuaternionUpdate(ax,ay,az,gx,gy,gz,mx,my,mz):
     norm = math.sqrt(ax * ax + ay * ay + az * az)
 
     if (norm == float(0.0)):
-        return // handle NaN
+        return #handle NaN
 
     '''
     norm = 1.0f/norm;
