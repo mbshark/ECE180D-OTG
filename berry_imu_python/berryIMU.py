@@ -35,7 +35,7 @@ zeta = math.sqrt(float(3.0) / float(4.0)) * GyroMeasDrift
 deltat = float(0.0)
 lastUpdate = 0
 Now = 0
-q[4] = {float(1.0),float(0.0),float(0.0),float(0.0)}
+#q[4] = {float(1.0),float(0.0),float(0.0),float(0.0)}
 
 
 
