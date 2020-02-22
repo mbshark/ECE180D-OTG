@@ -49,12 +49,11 @@ gRes = 0.0477
 mRes = 0.0168
 
 
-'''
 sumAcc = 0.0
 
 #calculating aRes
 for i in range (0,1000):
-    sumAcc += IMU.readACCz()
+    sumAcc += IMU.readMAGz()
 avgSum = sumAcc/1000
 print(1/avgSum)
 
