@@ -46,7 +46,7 @@ IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 # resolutions for accel, gyro, and mag data
 aRes = 0.000263
 gRes = 0.0477
-mRes = 0.0011
+mRes = 0.000489
 
 '''
 sumAcc = 0.0
