@@ -7,6 +7,17 @@ import datetime
 import os
 
 
+# TCP Communication instantiation
+#TCP_IP = '192.168.43.3'    #IP address on Server
+TCP_IP = '172.20.10.7'
+#TCP_IP = '131.179.47.232'
+TCP_PORT = 50000             #same port number as server
+BUFFER_SIZE = 20
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((TCP_IP, TCP_PORT))
+print("connected")
+
 RASBPERRYPI_NUM = 1 #be sure to change these per device
 
 start_time = int(round(time.time() * 1000))
@@ -33,6 +44,9 @@ gxRes = 0.023
 gyRes = 0.038
 gzRes = 0.00787
 mRes = 0.0003
+
+
+
 
 
 def MadgwickQuaternionUpdate(ax,ay,az,gx,gy,gz,mx,my,mz):
@@ -209,8 +223,9 @@ while True:
     yaw   -= 13.8; # Declination at Danville, California is 13 degrees 48 minutes and 47 seconds on 2014-04-04
     roll  *= float(180.0) / math.pi
 
-
-    print(str(RASBPERRYPI_NUM)+","+str(roll) + "," + str(pitch))
+    packet = str(RASBPERRYPI_NUM)+","+str(roll) + "," + str(pitch)
+    print(packet)
+    s.send(packet)
 
 
 
