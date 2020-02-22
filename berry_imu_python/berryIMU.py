@@ -73,14 +73,15 @@ def MadgwickQuaternionUpdate(ax,ay,az,gx,gy,gz,mx,my,mz):
     q4q4 = float(q4 * q4)
     
 
-    '''
     
+       
+    # Normalise accelerometer measurement
+    norm = math.sqrt(ax * ax + ay * ay + az * az)
 
+    if (norm == float(0.0)):
+        return // handle NaN
 
-f   
-    // Normalise accelerometer measurement
-    norm = sqrt(ax * ax + ay * ay + az * az);
-    if (norm == 0.0f) return; // handle NaN
+    '''
     norm = 1.0f/norm;
     ax *= norm;
     ay *= norm;
