@@ -175,8 +175,21 @@ while True:
     Now = b.microsecond
     deltat=((Now - lastUpdate)/float(1000000.0))
     lastUpdate = b.microsecond
-    MadgwickQuaternionUpdate(0,0,0,0,0,0,0,0,0)
+    MadgwickQuaternionUpdate(ax,ay,az,gx*math.pi/float(180.0),gy*math.pi/float(180.0),gz*math.pi/float(180.0),mx,my,mz)
     
+    yaw   = math.atan2(float(2.0) * (q[1] * q[2] + q[0] * q[3]), q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]) 
+    pitch = -math.asin(float(2.0) * (q[1] * q[3] - q[0] * q[2]))
+    roll  = math.atan2(float(2.0) * (q[0] * q[1] + q[2] * q[3]), q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3])
+    pitch *= float(180.0) / math.pi
+    yaw   *= float(180.0) / math.pi; 
+    yaw   -= 13.8; # Declination at Danville, California is 13 degrees 48 minutes and 47 seconds on 2014-04-04
+    roll  *= float(180.0) / math.pi
+
+
+    print(str(roll) + "," + str(pitch))
+
+
+
     #slow program down a bit, makes the output more readable
     time.sleep(0.01)
 
