@@ -156,7 +156,18 @@ def MadgwickQuaternionUpdate(ax,ay,az,gx,gy,gz,mx,my,mz):
 currmax = 0.0
 currmin = 0.0
 
+def make_float(val):
+    val = val.split(",")
+    num = float(0.0)
+    #there is a "-"
+    if(len(val)==2):
+        num = float(val[1])
+        num = -float(1.0)*num
+    else:
+        num = float(val[1])
 
+    return num
+    
 while True:
 
 
@@ -165,6 +176,7 @@ while True:
 		print(data)
        		data = data.encode('utf-8').strip()
         	data_splt = data.split(",")
+            ax = make_float(data_splt[0])
 		
 		print(data_splt)
 
