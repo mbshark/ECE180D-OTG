@@ -153,7 +153,7 @@ while True:
     b = datetime.datetime.now()    
     Now = b.microsecond
     deltat=((Now - lastUpdate)/float(1000000.0))
-    lastUpdate = b.microseconds
+    lastUpdate = b.microsecond
     MadgwickQuaternionUpdate(0,0,0,0,0,0,0,0,0)
     
     #slow program down a bit, makes the output more readable
