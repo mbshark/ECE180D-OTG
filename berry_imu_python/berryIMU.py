@@ -86,12 +86,13 @@ while True:
     mx = MAGx*mRes
     my = MAGy*mRes
     mz = MAGz*mRes
-    
+    print(mx)
+    '''
     if(ax > 0):
         print("++")
     else:
         print("--")
-
+    '''
     #slow program down a bit, makes the output more readable
     time.sleep(0.03)
     
