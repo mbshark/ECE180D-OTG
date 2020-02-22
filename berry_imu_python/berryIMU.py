@@ -27,7 +27,16 @@ import IMU
 import datetime
 import os
 
-GyroMeasError = PI*(float(40.0)/float(180.0))
+# global constants for quaternion update 
+GyroMeasError = math.pi*(float(40.0) / float(180.0))
+GyroMeasDrift = math.pi*(float(0.0) / float(180.0))
+beta = math.sqrt(float(3.0) / float(4.0)) * GyroMeasError
+zeta = math.sqrt(float(3.0) / float(4.0)) * GyroMeasDrift
+deltat = float(0.0)
+lastUpdate = 0
+Now = 0
+q[4] = {float(1.0),float(0.0),float(0.0),float(0.0)}
+
 
 
 
@@ -77,13 +86,13 @@ while True:
     mx = MAGx*mRes
     my = MAGy*mRes
     mz = MAGz*mRes
-    print(str(mz) +","+str(my)+","+str(mz))
-    '''
-    if(ax > 0):
-        print("++")
-    else:
-        print("--")
-    '''
+
+    #time vector
+    b = datetime.datetime.now()    
+    Now = b.microseconds
+    deltat=((Now - lastUpdate)/float(1000000.0))
+    lastUpdate = b.microseconds
+    
     #slow program down a bit, makes the output more readable
-    time.sleep(0.03)
+    time.sleep(0.01)
     
