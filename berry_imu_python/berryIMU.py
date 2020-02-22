@@ -56,7 +56,7 @@ print(1/avgSum)
 
 
 
-
+'''
 while True:
 
 
@@ -81,3 +81,4 @@ while True:
 
     #slow program down a bit, makes the output more readable
     time.sleep(0.03)
+    '''
