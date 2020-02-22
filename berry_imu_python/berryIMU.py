@@ -46,9 +46,9 @@ IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 # resolutions for accel, gyro, and mag data
 aRes = 0.000263
 gRes = 0.0477
-mRes = 0.0168
+mRes = 0.0011
 
-
+'''
 sumAcc = 0.0
 
 #calculating aRes
@@ -56,10 +56,10 @@ for i in range (0,1000):
     sumAcc += IMU.readMAGz()
 avgSum = sumAcc/1000
 print(1/avgSum)
-
-
-
 '''
+
+
+
 while True:
 
 
