@@ -7,6 +7,8 @@ import datetime
 import os
 
 
+RASBPERRYPI_NUM = 1 #be sure to change these per device
+
 start_time = int(round(time.time() * 1000))
 
 # global constants for quaternion update 
@@ -208,7 +210,7 @@ while True:
     roll  *= float(180.0) / math.pi
 
 
-    print(str(roll) + "," + str(pitch))
+    print(str(RASBPERRYPI_NUM)+","+str(roll) + "," + str(pitch))
 
 
 
