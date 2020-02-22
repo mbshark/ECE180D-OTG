@@ -1,7 +1,7 @@
-
+import math
 import datetime
 import serial
-
+import time
 
 # Serial Communication instantiation
 port = '/dev/ttyUSB0'
@@ -9,7 +9,9 @@ baud = 115200
 ser = serial.Serial(port, baud)
 ser.flushInput()
 
-
+start_time = int(round(time.time() * 1000))
+#print(milli_sec)
+#start_time = time.microsecond
 
 # global constants for quaternion update 
 GyroMeasError = math.pi*(float(40.0) / float(180.0))
@@ -168,34 +170,53 @@ while True:
 
     if(ser.in_waiting >0):
 		data= ser.readline()
-		print(data)
+#		print(data)
        		data = data.encode('utf-8').strip()
         	data_splt = data.split(",")
-            print(data)
-            ax = data_splt[0]
-            ay = data_splt[1]
-            az = data_splt[2]
-            gx = data_splt[3]
-            gy = data_splt[4]
-            gz = data_splt[5]
-            mx = data_splt[6]
-            my = data_splt[7]
-            mz = data_splt[8]
+#                print(data)
+                ax = data_splt[0]
+                ay = data_splt[1]
+                az = data_splt[2]
+                gx = data_splt[3]
+                gy = data_splt[4]
+                gz = data_splt[5]
+                mx = data_splt[6]
+                my = data_splt[7]
+                mz = data_splt[8]
 
-            ax = float(ax)
-            ay = float(ay)
-            az = float(az)
-            gx = float(gx)
-            gy = float(gy)
-            gz = float(gz)
-            mx = float(mx)
-            my = float(my)
-            mz = float(mz)
+                ax = float(ax)
+                ay = float(ay)
+                az = float(az)
+                gx = float(gx)
+                gy = float(gy)
+                gz = float(gz)
+                mx = float(mx)
+                my = float(my)
+                mz = float(mz)
             
-            conf = str(ax)+","+str(ay)+","+str(az)+","+str(gx)+","+str(gy)+","+str(gz)+","+str(mx)+","+str(my)+","+str(mz)
-            print(conf)
-		
-		print(data_splt)
+                conf = str(ax)+","+str(ay)+","+str(az)+","+str(gx)+","+str(gy)+","+str(gz)+","+str(mx)+","+str(my)+","+str(mz)
+                #print(conf)
+#		b = datetime.datetime.now()    
+#    		Now = b.microsecond
+		#Now = datetime.datetime.now()
+		Now = millis = int(round(time.time() * 1000))-start_time
+#		print(Now)
+
+    		deltat=((Now - lastUpdate)/float(1000.0))
+		lastUpdate = Now
+    		MadgwickQuaternionUpdate(ax,ay,az,gx*math.pi/float(180.0),gy*math.pi/float(180.0),gz*math.pi/float(180.0),mx,my,mz)
+    
+   		yaw   = math.atan2(float(2.0) * (q[1] * q[2] + q[0] * q[3]), q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]) 
+    		pitch = -math.asin(float(2.0) * (q[1] * q[3] - q[0] * q[2]))
+    		roll  = math.atan2(float(2.0) * (q[0] * q[1] + q[2] * q[3]), q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3])
+    		pitch *= float(180.0) / math.pi
+    		yaw   *= float(180.0) / math.pi; 
+    		yaw   -= 13.8; # Declination at Danville, California is 13 degrees 48 minutes and 47 seconds on 2014-04-04
+    		roll  *= float(180.0) / math.pi
+
+
+    		print(str(roll) + "," + str(pitch))		
+#		print(data_splt)
 
 
     '''
