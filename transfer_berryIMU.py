@@ -1,4 +1,4 @@
-import math
+
 import datetime
 import serial
 
@@ -171,12 +171,31 @@ while True:
 		print(data)
        		data = data.encode('utf-8').strip()
         	data_splt = data.split(",")
+            print(data)
+            ax = data_splt[0]
+            ay = data_splt[1]
+            az = data_splt[2]
+            gx = data_splt[3]
+            gy = data_splt[4]
+            gz = data_splt[5]
+            mx = data_splt[6]
+            my = data_splt[7]
+            mz = data_splt[8]
+
+            ax = float(ax)
+            ay = float(ay)
+            az = float(az)
+            gx = float(gx)
+            gy = float(gy)
+            gz = float(gz)
+            mx = float(mx)
+            my = float(my)
+            mz = float(mz)
+            
+            conf = str(ax)+","+str(ay)+","+str(az)+","+str(gx)+","+str(gy)+","+str(gz)+","+str(mx)+","+str(my)+","+str(mz)
+            print(conf)
 		
-		ax = data_splt[0]
-		ax = float(ax)
-		print(ax)
-		#print(float(a))
-#		print(data_splt)
+		print(data_splt)
 
 
     '''
