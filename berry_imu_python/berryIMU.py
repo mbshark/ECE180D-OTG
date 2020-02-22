@@ -28,7 +28,7 @@ gRes = 0.0477
 mRes = 0.000489
 
 
-def MadgwickQuaternionUpdate(ax,ay,-az,-gx,-gy,gz,-mx,my,mz):
+def MadgwickQuaternionUpdate(ax,ay,az,gx,gy,gz,mx,my,mz):
     q1 = q[0]
     q2 = q[1]
     q3 = q[2]
@@ -160,13 +160,13 @@ while True:
     #Scales the data based off precalculated values 
     ax = ACCx*aRes
     ay = ACCy*aRes
-    az = ACCz*aRes
+    az = -1*ACCz*aRes
 
-    gx = GYRx*gRes
-    gy = GYRy*gRes
+    gx = -1*GYRx*gRes
+    gy = -1*GYRy*gRes
     gz = GYRz*gRes
 
-    mx = MAGx*mRes
+    mx = -1*MAGx*mRes
     my = MAGy*mRes
     mz = MAGz*mRes
 
