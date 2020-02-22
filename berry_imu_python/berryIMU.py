@@ -81,25 +81,28 @@ def MadgwickQuaternionUpdate(ax,ay,az,gx,gy,gz,mx,my,mz):
     if (norm == float(0.0)):
         return #handle NaN
 
+    
+    norm = float(1.0)/norm
+    ax *= norm
+    ay *= norm
+    az *= norm
+
+    # Normalise magnetometer measurement
+    norm = math.sqrt(mx * mx + my * my + mz * mz)
+    if (norm == float(0.0)):
+         return  #// handle NaN
+    norm = float(1.0)/norm
+    mx *= norm
+    my *= norm
+    mz *= norm
+
+    # Reference direction of Earth's magnetic field
+    _2q1mx = float(2.0) * q1 * mx
+    _2q1my = float(2.0) * q1 * my
+    _2q1mz = float(2.0) * q1 * mz
+    _2q2mx = float(2.0) * q2 * mx
+
     '''
-    norm = 1.0f/norm;
-    ax *= norm;
-    ay *= norm;
-    az *= norm;
-
-    // Normalise magnetometer measurement
-    norm = sqrt(mx * mx + my * my + mz * mz);
-    if (norm == 0.0f) return; // handle NaN
-    norm = 1.0f/norm;
-    mx *= norm;
-    my *= norm;
-    mz *= norm;
-
-    // Reference direction of Earth's magnetic field
-    _2q1mx = 2.0f * q1 * mx;
-    _2q1my = 2.0f * q1 * my;
-    _2q1mz = 2.0f * q1 * mz;
-    _2q2mx = 2.0f * q2 * mx;
     hx = mx * q1q1 - _2q1my * q4 + _2q1mz * q3 + mx * q2q2 + _2q2 * my * q3 + _2q2 * mz * q4 - mx * q3q3 - mx * q4q4;
     hy = _2q1mx * q4 + my * q1q1 - _2q1mz * q2 + _2q2mx * q3 - my * q2q2 + my * q3q3 + _2q3 * mz * q4 - my * q4q4;
     _2bx = sqrt(hx * hx + hy * hy);
