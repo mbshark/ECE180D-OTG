@@ -28,9 +28,10 @@ gRes = 0.0477
 mRes = 0.000489
 
 
-def MadgwickQuaternionUpdate(ax,ay,az,gx,gy,gz,mx,my,mz)
+def MadgwickQuaternionUpdate(ax,ay,az,gx,gy,gz,mx,my,mz):
 {
     q1 = q[0], q2 = q[1], q3 = q[2], q4 = q[3];   // short name local variable for readability
+    print(type(q1))
     '''
     float norm;
     float hx, hy, _2bx, _2bz;
@@ -155,6 +156,7 @@ while True:
     Now = b.microsecond
     deltat=((Now - lastUpdate)/float(1000000.0))
     lastUpdate = b.microseconds
+    MadgwickQuaternionUpdate(0,0,0,0,0,0,0,0,0)
     
     #slow program down a bit, makes the output more readable
     time.sleep(0.01)
