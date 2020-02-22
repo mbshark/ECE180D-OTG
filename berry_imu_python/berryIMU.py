@@ -45,7 +45,10 @@ IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
 # resolutions for accel, gyro, and mag data
 aRes = 0.000263
+mRes = 0.0168
 
+
+'''
 sumAcc = 0.0
 
 #calculating aRes
@@ -75,10 +78,10 @@ while True:
     ay = ACCy*aRes
     az = ACCz*aRes
 
-    print(ax)
+    print(GYRx)
 
 
 
     #slow program down a bit, makes the output more readable
     time.sleep(0.03)
-    '''
+    
