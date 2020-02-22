@@ -43,6 +43,9 @@ Dont use the above values, these are just an example.
 IMU.detectIMU()     #Detect if BerryIMUv1 or BerryIMUv2 is connected.
 IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
+# resolutions for accel, gyro, and mag data
+aRes = 0.000263
+
 
 
 while True:
@@ -58,6 +61,12 @@ while True:
     MAGx = IMU.readMAGx()
     MAGy = IMU.readMAGy()
     MAGz = IMU.readMAGz()
+
+    ax = ACCx*aRes
+    ay = ACCy*aRes
+    az = ACCz*aRes
+
+    print(ax)
 
 
 
