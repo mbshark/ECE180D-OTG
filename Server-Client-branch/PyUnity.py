@@ -6,7 +6,7 @@ import threading
 import random
 import time
 import speech_recognition as sr
-import realtime_shape_detection as rt
+#import realtime_shape_detection as rt
 
 dir(sr)
 
@@ -16,14 +16,15 @@ BUFFER_SIZE = 1024
 # TCP Communication instantiation for unity
 
 #TCP_IP = 'localhost'#'192.168.1.12'		#IP address on Server
-TCP_IP = '192.168.43.3'
+#TCP_IP = '192.168.43.3'
+TCP_IP = '172.20.10.7'
 TCP_PORT_UNITY = 50000		#same port number as server
 TCP_PORT_IMU = 50005
 NUM_THREADS = 5
-UNITY_CONNECTED = False
-IMU_CONNECTED = False
+UNITY_CONNECTED = True
+IMU_CONNECTED = True
 
-NUM_IMUS = 2
+NUM_IMUS = 4
 last_time_sent = 0
 last_time_received = 0
 imu_dict = {"1": "R1,P1", "2":"R2,P2", "3":"R3,P3", "4":"R4,P4"}
@@ -104,7 +105,8 @@ async def speak():
 			while True:
 				print("Speaking Mode")
 				with m as source: 
-					audio = r.listen(source,phrase_time_limit=3)
+					audio = r.listen(source)
+					#audio = r.listen(source,phrase_time_limit=3)
 				print("Processing")
 				try:
 					# recognize speech using Google Web Speech
@@ -140,12 +142,14 @@ async def receiveSpeechData():
 
 async def receiveImageData():
 	global image_buf
+	'''
 	i = 0
 	#try:
 	rt.setup()
 	#except:
 	#	print("Setting up failed")
 	await rt.run()
+	'''
 	'''
 	while True:
 		#print("image")
@@ -169,10 +173,12 @@ async def sendToUnity():
 
 		'''
 		msg = ""
+		'''
 		for key in rt.image_data:
 			for quad in rt.image_data[key]:
 				shp = "({},{})".format(key, quad)
 				image_buf+=shp
+		'''
 		packet = "{}*{}*{}*{}*{}*{}".format(
 			imu_dict["1"],
 			imu_dict["2"],
