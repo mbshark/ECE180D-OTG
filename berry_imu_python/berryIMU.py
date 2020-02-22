@@ -60,21 +60,20 @@ def MadgwickQuaternionUpdate(ax,ay,az,gx,gy,gz,mx,my,mz):
     _2q3 = float(float(2.0) * q3)
     _2q4 = float(float(2.0) * q4)
     _2q1q3 = float(float(2.0) * q1 * q3)
+    _2q3q4 = float(float(2.0) * q3 * q4)
+    q1q1 = float(q1 * q1)
+    q1q2 = float(q1 * q2)
+    q1q3 = float(q1 * q3)
+    q1q4 = float(q1 * q4)
+    q2q2 = float(q2 * q2)
+    q2q3 = float(q2 * q3)
+    q2q4 = float(q2 * q4)
+    q3q3 = float(q3 * q3)
+    q3q4 = float(q3 * q4)
+    q4q4 = float(q4 * q4)
+    
 
     '''
-
-    float _2q1q3 = 2.0f * q1 * q3;
-    float _2q3q4 = 2.0f * q3 * q4;
-    float q1q1 = q1 * q1;
-    float q1q2 = q1 * q2;
-    float q1q3 = q1 * q3;
-    float q1q4 = q1 * q4;
-    float q2q2 = q2 * q2;
-    float q2q3 = q2 * q3;
-    float q2q4 = q2 * q4;
-    float q3q3 = q3 * q3;
-    float q3q4 = q3 * q4;
-    float q4q4 = q4 * q4;
     
 
 
