@@ -29,7 +29,7 @@ mRes = 0.000489
 
 
 def MadgwickQuaternionUpdate(ax,ay,az,gx,gy,gz,mx,my,mz):
-    q1 = q[0], q2 = q[1], q3 = q[2], q4 = q[3];   // short name local variable for readability
+    q1 = q[0], q2 = q[1], q3 = q[2], q4 = q[3];  # // short name local variable for readability
     print(type(q1))
     '''
     float norm;
