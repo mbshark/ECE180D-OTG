@@ -28,7 +28,7 @@ gRes = 0.0477
 mRes = 0.000489
 
 
-def MadgwickQuaternionUpdate(ax,ay,az,gx,gy,gz,mx,my,mz):
+def MadgwickQuaternionUpdate(ax,ay,-az,-gx,-gy,gz,-mx,my,mz):
     q1 = q[0]
     q2 = q[1]
     q3 = q[2]
