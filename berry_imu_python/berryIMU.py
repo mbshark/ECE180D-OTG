@@ -27,16 +27,7 @@ import IMU
 import datetime
 import os
 
-'''
-Here is an example:
-magXmin =  -1748
-magYmin =  -1025
-magZmin =  -1876
-magXmax =  959
-magYmax =  1651
-magZmax =  708
-Dont use the above values, these are just an example.
-'''
+GyroMeasError = PI*(float(40.0)/float(180.0))
 
 
 
