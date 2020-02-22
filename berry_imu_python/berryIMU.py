@@ -45,6 +45,7 @@ IMU.initIMU()       #Initialise the accelerometer, gyroscope and compass
 
 # resolutions for accel, gyro, and mag data
 aRes = 0.000263
+gRes = 0.0477
 mRes = 0.0168
 
 
@@ -74,13 +75,23 @@ while True:
     MAGy = IMU.readMAGy()
     MAGz = IMU.readMAGz()
 
+    #Scales the data based off precalculated values 
     ax = ACCx*aRes
     ay = ACCy*aRes
     az = ACCz*aRes
 
-    print(GYRx)
+    gx = GYRx*gRes
+    gy = GYRy*gRes
+    gz = GYRz*gRes
 
-
+    mx = MAGx*mRes
+    my = MAGy*mRes
+    mz = MAGz*mRes
+    
+    if(ax > 0):
+        print("++")
+    else:
+        print("--")
 
     #slow program down a bit, makes the output more readable
     time.sleep(0.03)
