@@ -162,8 +162,10 @@ while True:
 
     if(ser.in_waiting >0):
 		data= ser.readline()
+        data = data.encode('utf-8')
+        data_splt = data.split(",")
 		
-		print(data)
+		print(data_splt)
 
 
     '''
