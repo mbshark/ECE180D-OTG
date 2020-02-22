@@ -86,7 +86,7 @@ while True:
     mx = MAGx*mRes
     my = MAGy*mRes
     mz = MAGz*mRes
-    print(mx)
+    print(str(mz) +","+str(my)+","+str(mz))
     '''
     if(ax > 0):
         print("++")

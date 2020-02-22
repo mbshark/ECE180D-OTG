@@ -9,7 +9,7 @@ ser.flushInput()
 
 # TCP Communication instantiation
 #TCP_IP = '192.168.1.67'    #IP address on Server
-TCP_IP = '172.20.10.7'
+TCP_IP = '172.20.10.3'
 TCP_PORT = 50005             #same port number as server
 BUFFER_SIZE = 20
 
