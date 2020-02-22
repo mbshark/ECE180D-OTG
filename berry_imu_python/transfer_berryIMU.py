@@ -2,7 +2,7 @@
 
 import time
 import math
-import IMU
+#import IMU
 import datetime
 import os
 import serial
@@ -157,14 +157,17 @@ currmax = 0.0
 currmin = 0.0
 
 def make_float(val):
-    val = val.split(",")
+    temp = val.split(",")
     num = float(0.0)
+    print(val)
+
     #there is a "-"
-    if(len(val)==2):
-        num = float(val[1])
+    if(len(temp)==2):
+        print(temp)
+        num = float(temp[1])
         num = -float(1.0)*num
     else:
-        num = float(val[1])
+        num = float(val)
 
     return num
     
@@ -173,14 +176,19 @@ while True:
 
     if(ser.in_waiting >0):
 		data= ser.readline()
-		print(data)
+#		print(data)
        		data = data.encode('utf-8').strip()
         	data_splt = data.split(",")
-            ax = make_float(data_splt[0])
-		
-		print(data_splt)
-
-
+#            	ax = make_float(data_splt[0])
+		a = data_splt[0].split("-")
+		#print(a)		
+#		print(data_splt)
+#		print(float(a[0]))
+		d = a[0]
+		print(type(d))
+		print(float(d))
+		s = '0.35'
+		print(float(s))
     '''
 
     

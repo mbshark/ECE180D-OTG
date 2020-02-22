@@ -1,4 +1,4 @@
-
+import math
 import datetime
 import serial
 
@@ -171,9 +171,12 @@ while True:
 		print(data)
        		data = data.encode('utf-8').strip()
         	data_splt = data.split(",")
-            ax = make_float(data_splt[0])
 		
-		print(data_splt)
+		ax = data_splt[0]
+		ax = float(ax)
+		print(ax)
+		#print(float(a))
+#		print(data_splt)
 
 
     '''
