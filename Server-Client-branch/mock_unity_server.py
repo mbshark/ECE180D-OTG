@@ -4,7 +4,9 @@ import serial
 # Serial Communication instantiation
 BUFFER_SIZE = 1024   
 # TCP Communication instantiation for unity
-TCP_IP = 'localhost'#192.168.1.12'    #IP address on Server
+#TCP_IP = 'localhost'#192.168.1.12'    #IP address on Server
+#TCP_IP = '192.168.1.184'
+TCP_IP = '172.20.10.7'
 TCP_PORT_UNITY = 50000        #same port number as server
 
 import signal
