@@ -17,9 +17,16 @@ BUFFER_SIZE = 1024
 
 #TCP_IP = 'localhost'#'192.168.1.12'		#IP address on Server
 #TCP_IP = '192.168.43.3'
-TCP_IP = '172.20.10.7'
-TCP_PORT_UNITY = 50000		#same port number as server
-TCP_PORT_IMU = 50005
+# TCP connection for unity side to connect to
+TCP_IP = '192.168.43.44'
+#TCP_IP = '172.20.10.4'
+TCP_PORT_UNITY = 50005		#same port number as server
+
+# TCP connection for IMUs to connect to
+TCP_IP_IMU = '192.168.43.9'
+#TCP_IP_IMU = '172.20.10.7'
+TCP_PORT_IMU = 50006
+
 NUM_THREADS = 5
 UNITY_CONNECTED = True
 IMU_CONNECTED = True
@@ -51,7 +58,7 @@ async def setupConnections():
 		imus = 0
 		while imus != NUM_IMUS:
 			s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-			s.bind((TCP_IP, TCP_PORT_IMU))
+			s.bind((TCP_IP_IMU, TCP_PORT_IMU))
 			s.listen(1)
 			conn, addr = s.accept()
 			print("New IMU addr: ", addr)
@@ -105,7 +112,7 @@ async def speak():
 			while True:
 				print("Speaking Mode")
 				with m as source: 
-					audio = r.listen(source)
+					#audio = r.listen(source)
 					#audio = r.listen(source,phrase_time_limit=3)
 				print("Processing")
 				try:
