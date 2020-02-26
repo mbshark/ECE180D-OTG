@@ -10,10 +10,10 @@ import socket
 
 
 # TCP Communication instantiation
-#TCP_IP = '192.168.43.3'    #IP address on Server
-TCP_IP = '172.20.10.7'
+TCP_IP = '192.168.43.9'    #IP address on Server
+#TCP_IP = '172.20.10.7'
 #TCP_IP = '131.179.47.232'
-TCP_PORT = 50005             #same port number as server
+TCP_PORT = 50006             #same port number as server
 BUFFER_SIZE = 20
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
