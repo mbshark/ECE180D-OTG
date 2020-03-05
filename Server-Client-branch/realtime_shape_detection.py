@@ -4,8 +4,8 @@ import socket
 import asyncio
 import random
 import pickle
-from ColorLabeler import ColorLabeler
-import imutils
+# from ColorLabeler import ColorLabeler
+# import imutils
 # TCP Communication instantiation
 
 BUFFER_SIZE = 1024
@@ -16,7 +16,7 @@ BUFFER_SIZE = 1024
 #s.connect((TCP_IP, TCP_PORT))
 cap = None
 font = None
-image_data = {"T": [], "R": [], "P": []}
+image_data = {"T": [], "R": [], "P": [], "H": []}
 width = 0.0
 height = 0.0
 frame = None
@@ -55,7 +55,7 @@ async def run():
 	global cap, font, width, height, image_data
 
 	while True:
-		
+
 		await asyncio.sleep(random.uniform(0.1,0.5))
 		_, frame = cap.read()
 		hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -71,10 +71,10 @@ async def run():
 		upper = {'red':(186,255,255), 'green':(86,255,255), 'blue':(117,255,255), 'yellow':(54,255,255), 'orange':(20,255,255)}
 		colors = {'red':(0,0,255), 'green':(0,255,0), 'blue':(255,0,0), 'yellow':(0, 255, 217), 'orange':(0,140,255)}
 
-		#lower_red = np.array([l_h, l_s, l_v])
-		lower_red = lower['red']
-		upper_red = upper['red']
-		#upper_red = np.array([u_h, u_s, u_v])
+		lower_red = np.array([l_h, l_s, l_v])
+		# lower_red = lower['red']
+		# upper_red = upper['red']
+		upper_red = np.array([u_h, u_s, u_v])
 
 		mask = cv2.inRange(hsv, lower_red, upper_red)
 		kernel = np.ones((5, 5), np.uint8)
@@ -88,8 +88,8 @@ async def run():
 			# Opencv 3.x.x
 			_, contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 		#send data
-		image_data = {"T": [], "R": [], "P": []}
-		cl = ColorLabeler()
+		image_data = {"T": [], "R": [], "P": [], "H": []}
+		# cl = ColorLabeler()
 		for cnt in contours:
 
 			#color = cl.label(cnt)
@@ -100,7 +100,7 @@ async def run():
 			y = approx.ravel()[1]
 
 			if area > 300:
-				if len(approx) <= 5:
+				if len(approx) <= 6:
 					txt=""
 					cv2.drawContours(frame, [approx], 0, (0, 255, 0), 10)
 					if x <= width/2:
@@ -127,13 +127,12 @@ async def run():
 		if key == 27:
 			break
 
-
 	cap.release()
 	cv2.destroyAllWindows()
 
 def quadrantHelp(sides, quadrant):
 	shapeDict = {3:"T", 4:"R", 5:"P", 6: "H"}
-	if sides in range(3,6): #>= 3 and approx < 6:
+	if sides in range(3,7): #>= 3 and approx < 7:
 		if quadrant not in image_data[shapeDict[sides]]:
 			image_data[shapeDict[sides]].append(quadrant)
 		return shapeDict[sides] + "-Q"+str(quadrant)
