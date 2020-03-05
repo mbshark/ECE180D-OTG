@@ -17,7 +17,8 @@ BUFFER_SIZE = 1024
 
 #TCP_IP = 'localhost'#'192.168.1.12'		#IP address on Server
 #TCP_IP = '192.168.43.3'
-# TCP connection for unity side to connect to
+
+# TCP connection to connect to unity server
 TCP_IP = '192.168.43.44'
 #TCP_IP = '172.20.10.4'
 TCP_PORT_UNITY = 50005		#same port number as server
@@ -134,7 +135,8 @@ async def speak():
 
 async def receiveSpeechData():
 	global speech_cmd
-	commands = ["pause", "play", "hint", "unlock"]
+	commands = ["pause", "play", "hint", "unlock", \
+	"bruin", "banana", "ring","umbrella", "ironing board", "notebook"]
 	while True:
 		command = await speak()
 		msg_arr= (str(command)).split(" ")
