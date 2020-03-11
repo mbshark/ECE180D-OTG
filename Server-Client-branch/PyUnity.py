@@ -20,16 +20,16 @@ BUFFER_SIZE = 1024
 
 # TCP connection to connect to unity server
 TCP_IP = '192.168.43.44'
-#TCP_IP = '172.20.10.4'
+#TCP_IP = '172.20.10.4' #ericks hotspot
 TCP_PORT_UNITY = 50005		#same port number as server
 
 # TCP connection for IMUs to connect to
-TCP_IP_IMU = '192.168.43.9'
-#TCP_IP_IMU = '172.20.10.7'
+TCP_IP_IMU = '192.168.43.9' 
+#TCP_IP_IMU = '192.168.1.184'
 TCP_PORT_IMU = 50006
 
 NUM_THREADS = 5
-UNITY_CONNECTED = False
+UNITY_CONNECTED = True
 IMU_CONNECTED = False
 
 NUM_IMUS = 4
@@ -136,15 +136,19 @@ async def speak():
 async def receiveSpeechData():
 	global speech_cmd
 	commands = ["pause", "play", "hint", "unlock", \
-	"bruin", "banana", "ring","umbrella", "ironing board", "notebook"]
+	"bruin", "banana", "ring","umbrella", "ironing", "iron", "notebook"]
 	while True:
 		command = await speak()
 		msg_arr= (str(command)).split(" ")
-		
+		#msg_arr = str(command)
 		for msg in msg_arr:
 			if msg.lower() in commands:
+				
 				print("Player said ", msg)
-				speech_cmd = msg
+				if (msg.lower() == "iron" or msg.lower() == "ironing"):
+					speech_cmd = "iron"
+				else:
+					speech_cmd = msg
 				break
 		await asyncio.sleep(random.uniform(0.1,0.2))
 
@@ -185,7 +189,7 @@ async def sendToUnity():
 		
 		for key in rt.image_data:
 			for quad in rt.image_data[key]:
-				shp = "({},{})".format(key, quad)
+				shp = "({},{})$".format(key, quad)
 				image_buf+=shp
 		
 		packet = "{}*{}*{}*{}*{}*{}".format(
