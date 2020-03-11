@@ -29,7 +29,7 @@ TCP_IP_IMU = '192.168.43.9'
 TCP_PORT_IMU = 50006
 
 NUM_THREADS = 5
-UNITY_CONNECTED = True
+UNITY_CONNECTED = False#True
 IMU_CONNECTED = False
 
 NUM_IMUS = 4
@@ -186,11 +186,38 @@ async def sendToUnity():
 
 		'''
 		msg = ""
+		#print(rt.image_data)
+		#quads = [1, 2, 3, 4]
+		quad_shp = {1:[],2:[],3:[],4:[]}
+
+		for shape in rt.image_data:
+			key = rt.image_data[shape]
+			for q in key:
+				quad_shp[q].append(shape)
+		#print(quad_shp)
 		
+		for quad in quad_shp:
+			shapes = quad_shp[quad]
+			if len(shapes) == 0:
+				shp = "({},{})$".format("N", quad)
+				image_buf+=shp
+			else:
+				for shape in shapes:
+					shp = "({},{})$".format(shape, quad)
+					image_buf+=shp
+		'''
 		for key in rt.image_data:
 			for quad in rt.image_data[key]:
 				shp = "({},{})$".format(key, quad)
 				image_buf+=shp
+				if quad in quads:
+					quads.remove(quad)
+
+		'''
+		#print(quads)
+		#for unused in quads:
+		#	shp = "({},{})$".format("N", unused)
+		#	image_buf+=shp
 		
 		packet = "{}*{}*{}*{}*{}*{}".format(
 			imu_dict["1"],
