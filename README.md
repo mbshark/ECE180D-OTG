@@ -7,7 +7,7 @@ Please refer to Fall/ folder for all materials related to the Grad Cap solution.
 Please refer to the following folders/files relevant to this project:
 <ul>
 <li>IMUcontrol.cs : Unity Server, Game Flow for Escape Room</li>
-<li>Server-Client-branch</li>
+<li>Server-Client-branch : Final Integrated scripts for Escape Room</li>
 	<ul>
 	<li>PyUnity.py : Python Server that creates and sends packet to MacUnity.py</li>
 	<li>MacUnity.py : Python Server receiving packets and sending to Unity server</li>
@@ -24,7 +24,7 @@ Please refer to the following folders/files relevant to this project:
 	<ul>
 	<li>finger-counting.py : main script</li>
 	</ul>
-<li>Server_Client_MockIMU :</li>
+<li>Server_Client_MockIMU : testing/experimentation scripts</li>
 	<ul>
 	<li>PyUnity in testing/development mode with IMU</li>
 	<li>berry_imu : copy of contents from Server-Client-branch/berry_imu</li>
