@@ -16,13 +16,13 @@ BUFFER_SIZE = 20
 
 connected = false
 
-try:
-    While connected == false:
+while (connected == false):
+    try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((TCP_IP, TCP_PORT))
         connected = true
-except ValueError:
-    connected = false
+    except ValueError:
+        connected = false
 
 print("connected")
 
