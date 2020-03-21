@@ -20,7 +20,8 @@ public class IMUcontrol : MonoBehaviour
     private string imu_3_data = null;
     private string imu_4_data = null;
     private string speech_data = null;
-    private string image_data = null;
+    private string image_data = "Aladeen";
+    private int R3hold=30;
     
     public bool UnlockR1=false;
     
@@ -39,11 +40,11 @@ public class IMUcontrol : MonoBehaviour
 
     private string[] riddles={
         "Chimpanzee snack",
-        "If you like it you better...",
+        "If you like it, then you shoulda...",
         "Rihanna in the rain",
         "how to press a shirt",
         "Important school supply",
-        ""
+        "Try something Acrostic"
     };
 
     private int HexCount=0;
@@ -199,7 +200,6 @@ public class IMUcontrol : MonoBehaviour
                     imu_4_data = packet[3];
                     speech_data = packet[4];
                     image_data = packet[5];
-                    Debug.Log(speech_data);
                     
                 }
 
@@ -379,12 +379,14 @@ public class IMUcontrol : MonoBehaviour
                     TriCount=0;
                 }
 
-                if (HexCount==4 && PentCount==4 && RectCount==4 && TriCount==4)
+                if (HexCount>=R3hold && PentCount>=R3hold && RectCount>=R3hold && TriCount>=R3hold)
                 {
                     UnlockR3=true;
                 }
-                string [] shape_data=image_data.Split('$');
-                if (HexCount<5)
+
+                string [] shape_data = image_data.Split('$');
+
+                if (HexCount<R3hold)
                 {
                     switch (shape_data[0].Substring(1,1))
                     {
@@ -409,7 +411,7 @@ public class IMUcontrol : MonoBehaviour
 
                     }
                 }
-                if (PentCount<5)
+                if (PentCount<R3hold)
                 {
                     switch (shape_data[1].Substring(1,1))
                     {
@@ -429,12 +431,12 @@ public class IMUcontrol : MonoBehaviour
                             Q2text.SetText("2");
                             break;
                         default:
-                            Debug.Log(shape_data[1].Substring(1,1));
+                            Debug.Log(shape_data[1].Substring(1,1).ToString());
                             break;
 
                     }
                 }
-                if (RectCount<5)
+                if (RectCount<R3hold)
                 {
                     switch (shape_data[2].Substring(1,1))
                     {
@@ -459,7 +461,7 @@ public class IMUcontrol : MonoBehaviour
 
                     }
                 }
-                if (TriCount<5)
+                if (TriCount<R3hold)
                 {
                     switch (shape_data[3].Substring(1,1))
                     {
@@ -623,7 +625,6 @@ public class IMUcontrol : MonoBehaviour
     	int combination=3;
         if (!panel_passed[3])
         {
-        	Debug.Log("sjkhgilae");
             my_player_script_4.setDigit4(value.ToString());  
             // compares to find when the values equal
             if (value == combination && !time_flag[3])
