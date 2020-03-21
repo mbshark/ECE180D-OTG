@@ -2,7 +2,7 @@ import socket
 import time
 # TCP Communication instantiation
 TCP_IP = 'localhost'#''192.168.1.12'	#IP address on Server
-TCP_PORT_IMU = 50005			 #same port number as server
+TCP_PORT_IMU = 50006			 #same port number as server
 BUFFER_SIZE = 1024		  
 import signal
 signal.signal(signal.SIGINT, signal.SIG_DFL)
