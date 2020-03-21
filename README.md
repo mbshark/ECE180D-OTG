@@ -30,5 +30,9 @@ Please refer to the following folders/files relevant to this project:
 	<li>berry_imu : copy of contents from Server-Client-branch/berry_imu</li>
 	<li>mock_IMU_client[1-4].py : Mock IMU client scripts</li>
 	</ul>
+<li>BerryIMU_Script_Automation- Final Revision</li>
+	<ul>
+	<li>Same contents as others. Uses script to automate connection/running of IMUs</li>
+	</ul>	
 </ul>
 
